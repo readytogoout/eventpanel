@@ -3,10 +3,5 @@
     Login
 {% endblock %}
 {% block content %}
-    <form action="{{ url_for('login') }}" method="post">
-        <input type="text" name="username">
-        <input type="text" name="password">
-        <input type="hidden" name="redirect" value="{{ request.args.get('redirect_to', '/') }}">
-        <input type="submit" value="Login">
-    </form>
+    {% include "logincomponent.html" %}
 {% endblock %}

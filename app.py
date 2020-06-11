@@ -1,6 +1,9 @@
+import base64
+import hashlib
+
+import bcrypt
 from flask import Flask, render_template, redirect, request
 from flask_peewee.db import Database
-import bcrypt
 
 app = Flask(__name__)
 app.config.from_json('data/config.json')
@@ -23,6 +26,13 @@ def goodbye(u: int):
     return render_template('number.html', number=u)
 
 
+def pre_encode_password(password: str):
+    """
+    Still needs encoding using :meth:`bcrypt.hashpw`
+    """
+    return base64.b64encode(hashlib.sha256(password.encode(encoding='utf-8')).digest())
+
+
 # TODO: sessioncookie
 @app.route('/login', methods=['POST'])
 def login():
@@ -36,7 +46,7 @@ def login():
     e: models.EventManger = models.EventManager.get_or_none(username=username)
     if e is None:
         return 'Unknown Username'
-    if bcrypt.checkpw(password, e.password):
+    if bcrypt.checkpw(pre_encode_password(password), e.password):
         return redirect(redirect_url, code=302)
     else:
         return "Invalid Username"

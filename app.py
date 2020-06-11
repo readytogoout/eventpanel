@@ -2,7 +2,7 @@ import base64
 import hashlib
 
 import bcrypt
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, flash, url_for
 from flask_peewee.db import Database
 
 app = Flask(__name__)
@@ -23,6 +23,7 @@ def hello_world():
 @app.route('/<int:u>')
 def goodbye(u: int):
     print(u)
+    flash(f'{u + 3}', category='error')
     return render_template('number.html', number=u)
 
 
@@ -39,17 +40,21 @@ def login():
     username = request.form.get('username')
     password = request.form.get('password')
     if username is None:
-        return "No Username"
+        flash("Please enter a username", category="error")
+        return redirect(url_for('login_form'))
     if password is None:
-        return "No Password"
+        flash("Please enter a password", category="error")
+        return redirect(url_for('login_form'))
     redirect_url = request.form.get('redirect', '/')
     e: models.EventManger = models.EventManager.get_or_none(username=username)
     if e is None:
-        return 'Unknown Username'
+        flash("Unknown username", category="error")
+        return redirect(url_for('login_form'))
     if bcrypt.checkpw(pre_encode_password(password), e.password):
         return redirect(redirect_url, code=302)
     else:
-        return "Invalid Username"
+        flash("Invalid password", category="error")
+        return redirect(url_for('login_form'))
 
 
 @app.route('/login', methods=['GET'])

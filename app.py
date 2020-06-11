@@ -8,6 +8,7 @@ from flask import Flask, render_template, redirect, request, flash, url_for, ses
 from flask_peewee.db import Database
 
 from admin import get_blueprint as get_admin_blueprint
+from util import auth_required
 
 app = Flask(__name__)
 app.config.from_json('data/config.json')
@@ -25,6 +26,7 @@ def hello_world():
 
 
 @app.route('/<int:u>')
+@auth_required()
 def goodbye(u: int):
     print(u)
     flash(f'{u + 3}', category='error')

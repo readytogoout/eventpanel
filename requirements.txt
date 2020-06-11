@@ -2,3 +2,4 @@ flask
 flask-peewee
 bcrypt
 peewee
+click

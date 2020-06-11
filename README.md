@@ -13,3 +13,5 @@ Required files in the `data/` directory:
   }
 }
 ```
+##Sources
+Login Panel: https://bootsnipp.com/snippets/bxzmb

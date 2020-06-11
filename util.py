@@ -7,7 +7,7 @@ def auth_required(requires_site_admin=False):
     def wrapper(f):
         @functools.wraps(f)
         def decorated_function(*args, **kwargs):
-            if session.get('user') is None:
+            if session.get('username') is None:
                 flash('Login using your Event Manager Account first')
             elif requires_site_admin and not session.get('admin', False):
                 flash('Site Admin Only', 'error')

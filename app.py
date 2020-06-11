@@ -8,7 +8,7 @@ from flask import Flask, render_template, redirect, request, flash, url_for, ses
 from flask_peewee.db import Database
 
 from admin import get_blueprint as get_admin_blueprint
-from util import auth_required
+from util import auth_required, templated
 
 app = Flask(__name__)
 app.config.from_json('data/config.json')
@@ -21,8 +21,9 @@ import database as models
 
 # region a
 @app.route('/', methods=['GET', 'POST', 'PUT'])
+@templated('index.html')
 def hello_world():
-    return f'Hello {session.get("username", "World")}!'
+    return dict()
 
 
 @app.route('/<int:u>')

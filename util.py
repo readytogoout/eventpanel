@@ -1,6 +1,6 @@
 import functools
 
-from flask import session, url_for, redirect, flash, request
+from flask import session, url_for, redirect, flash, request, render_template
 
 
 def auth_required(requires_site_admin=False):
@@ -15,6 +15,17 @@ def auth_required(requires_site_admin=False):
                 return f(*args, **kwargs)
 
             return redirect(url_for('login_form', redirect_to=request.url))
+
+        return decorated_function
+
+    return wrapper
+
+
+def templated(template):
+    def wrapper(f):
+        @functools.wraps(f)
+        def decorated_function(*args, **kwargs):
+            return render_template(template, **f(*args, **kwargs))
 
         return decorated_function
 

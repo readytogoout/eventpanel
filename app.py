@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, request
 from flask_peewee.db import Database
+import bcrypt
 
 app = Flask(__name__)
 app.config.from_json('data/config.json')
@@ -7,8 +8,7 @@ app.config.from_json('data/config.json')
 db = Database(app)
 
 # noinspection PyUnresolvedReferences
-from database import *
-
+import database as models
 
 
 # region a
@@ -28,8 +28,15 @@ def goodbye(u: int):
 def login():
     username = request.form.get('username')
     password = request.form.get('password')
-    redirect_url = request.form.get('redirect')
-    if username == "total" and password == "sicher":
+    if username is None:
+        return "No Username"
+    if password is None:
+        return "No Password"
+    redirect_url = request.form.get('redirect', '/')
+    e: models.EventManger = models.EventManager.get_or_none(username=username)
+    if e is None:
+        return 'Unknown Username'
+    if bcrypt.checkpw(password, e.password):
         return redirect(redirect_url, code=302)
     else:
         return "Invalid Username"

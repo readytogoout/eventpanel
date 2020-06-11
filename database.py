@@ -28,9 +28,10 @@ class EventAttendee(db.Model):
     event = ForeignKeyField(Event)
 
 
-__all_tables__ = ('Instance', 'EventManager', 'Event', 'EventManagerRelation', 'EventAttendee')
-__all__ = __all_tables__
+__all__ = ('Instance', 'EventManager', 'Event', 'EventManagerRelation', 'EventAttendee')
 
 # lmao was für ein idiot hat das geschrieben
 # ah, ja genau: ich
-db.database.create_tables([eval(table) for table in __all_tables__], safe=True)
+db.database.create_tables([
+    Instance, EventManager, Event, EventManagerRelation, EventAttendee
+], safe=True)

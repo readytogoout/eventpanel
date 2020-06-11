@@ -3,5 +3,19 @@
     Login
 {% endblock %}
 {% block content %}
-    {% include "logincomponent.html" %}
+    <div id="logincomponent" class="shadow-lg">
+        <h3 class="text-center text-white pt-5">Ready to go out?</h3>
+        {% include "logincomponent.html" %}
+    </div>
+{% endblock %}
+
+{% block style %}
+    body {
+        background-color: #263e55;
+    }
+    #logincomponent {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+    }
 {% endblock %}

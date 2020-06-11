@@ -7,6 +7,8 @@ app = Flask(__name__)
 app.config.from_json('data/config.json')
 
 db = Database(app)
+from database import *
+
 
 
 # region a

@@ -9,8 +9,9 @@ class Instance(db.Model):
 
 
 class EventManager(db.Model):
-    username = CharField()
+    username = CharField(primary_key=True)
     password = CharField()
+    site_admin = BooleanField(default=False)
     email = CharField()
 
 

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}
+    Login
+{% endblock %}
+{% block content %}
+    <form>
+        <input type="text" name="username">
+        <input type="text" name="password">
+        <input type="hidden" name="redirect" value="{{ request.args.get('redirect_to', '/') }}">
+        <input type="submit" value="Login">
+    </form>
+{% endblock %}

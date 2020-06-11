@@ -1,5 +1,3 @@
-import json
-
 from flask import Flask, render_template, redirect, request
 from flask_peewee.db import Database
 
@@ -7,6 +5,8 @@ app = Flask(__name__)
 app.config.from_json('data/config.json')
 
 db = Database(app)
+
+# noinspection PyUnresolvedReferences
 from database import *
 
 
@@ -25,7 +25,7 @@ def goodbye(u: int):
 
 # TODO: sessioncookie
 @app.route('/login', methods=['POST'])
-def POST_login():
+def login():
     username = request.form.get('username')
     password = request.form.get('password')
     redirect_url = request.form.get('redirect')
@@ -34,9 +34,11 @@ def POST_login():
     else:
         return "Invalid Username"
 
+
 @app.route('/login', methods=['GET'])
-def GET_login():
-    return """Hallo Welt"""
+def login_form():
+    return render_template('login.html')
+
 
 # endregion a
 

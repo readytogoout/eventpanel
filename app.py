@@ -4,8 +4,7 @@ from flask import Flask, render_template
 from flask_peewee.db import Database
 
 app = Flask(__name__)
-with open('data/config.json') as fp:
-    app.config.from_object(json.load(fp))
+app.config.from_json('data/config.json')
 
 db = Database(app)
 

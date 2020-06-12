@@ -17,7 +17,7 @@ class EventManager(db.Model):
 
 class Event(db.Model):
     name = CharField()
-    instance = ForeignKeyField(Instance)
+    instance = ForeignKeyField(Instance, backref='events')
 
 
 class EventManagerRelation(db.Model):

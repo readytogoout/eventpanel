@@ -1,9 +1,9 @@
 import base64
+import hashlib
+
 import bcrypt
 import click
-import hashlib
 import peewee
-
 from flask import Flask, render_template, redirect, request, flash, url_for, session
 from flask_peewee.db import Database
 
@@ -17,6 +17,15 @@ db = Database(app)
 
 # noinspection PyUnresolvedReferences
 import database as models
+
+
+@app.context_processor
+def global_jinja_injection():
+    return dict(
+        logged_in='user' in session,
+        admin=session.get('admin', False),
+        username=session.get('user'),
+    )
 
 
 # region a

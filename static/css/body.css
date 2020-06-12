@@ -1,6 +1,9 @@
 @import "../branding/css/colors.css";
 @import "menu.css";
 @import "login.css";
+@import "grid.css";
+@import "table.css";
+@import "instances.css";
 
 body {
     background: var(--rdy-darkblue);

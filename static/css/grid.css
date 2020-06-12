@@ -1,0 +1,7 @@
+.multipanel {
+    display: flex;
+    flex-wrap: wrap;
+}
+.multipanel > * {
+    margin: 1em;
+}

@@ -1,0 +1,17 @@
+table {
+
+}
+
+tbody tr:nth-child(odd) {
+    background: var(--rdy-blue);
+}
+
+td {
+    margin: 0;
+    padding: 0.5em;
+}
+
+thead {
+    font-weight: bold;
+    color: var(--rdy-green);
+}

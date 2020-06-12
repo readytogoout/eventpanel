@@ -3,5 +3,25 @@
     Admin
 {% endblock %}
 {% block content %}
-    No Admin Content Yet <!-- todo -->
+    <div class="multipanel">
+        <table class="instance-list bordered">
+            <thead>
+            <tr>
+                <td>Instance Name / Id</td>
+                <td>Instance Hostname</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for instance in instances %}
+                <tr>
+                    <td>{{ instance.name }}</td>
+                    <td>{{ instance.hostname }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div>
+            Placeholder to test multipanel
+        </div>
+    </div>
 {% endblock %}

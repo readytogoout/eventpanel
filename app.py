@@ -1,9 +1,9 @@
 import base64
-import hashlib
-
 import bcrypt
 import click
+import hashlib
 import peewee
+
 from flask import Flask, render_template, redirect, request, flash, url_for, session
 from flask_peewee.db import Database
 

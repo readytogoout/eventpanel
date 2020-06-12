@@ -1,3 +1,17 @@
 .instance-list {
     max-width: 30em;
 }
+
+.event-list {
+    max-width: 80em;
+}
+
+.manager-list {
+ list-style-type: none;
+}
+.manager-list li {
+    display: inline;
+}
+.manager-list li:not(:first-child)::before {
+    content: ", ";
+}

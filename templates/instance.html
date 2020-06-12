@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}
+    Instance {{ name }}
+{% endblock %}
+{% block content %}
+    <div class="multipanel">
+        <table class="bordered event-list">
+            <thead>
+            <tr>
+                <td colspan="3">Events</td>
+            </tr>
+            <tr>
+                <td>Event Id</td>
+                <td>Event Name</td>
+                <td>Event Managers</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for event in events %}
+                <tr>
+                    <td>{{ event.event_id }}</td>
+                    <td>{{ event.name }}</td>
+                    <td>
+                        <ul class="manager-list">
+                            {% for manager in managers[event.event_id] %}
+                                <li>{{ manager }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

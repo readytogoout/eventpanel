@@ -32,11 +32,15 @@
 <header>
     <div class="navigation-toggle" id="navigation-toggle"><i class="gg-menu"></i></div>
     <nav class="navigation-container navigation-collapsed" id="navigation-container">
-        <img src="{{ url_for('static', filename='branding/png/logo_schrift.png') }}" alt="logo" class="logo">
+        <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='branding/png/logo_schrift.png') }}" alt="logo" class="logo"></a>
         <ul class="navigation-list" id="navigation-list">
-            <li><a>Home</a></li>
-            <li><a>Admin</a></li>
-            <li>Contact</li>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            {% if logged_in %}
+            {% endif %}
+            {% if is_admin %}
+            <li><a href="{{ url_for('admin.index') }}">Site-Admin</a></li>
+            {% endif %}
+            <li><a href="mailto:kontakt@readytogoout.games">Contact</a></li>
         </ul>
     </nav>
 </header>

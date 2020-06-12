@@ -23,7 +23,7 @@ import database as models
 def global_jinja_injection():
     return dict(
         logged_in='user' in session,
-        admin=session.get('admin', False),
+        is_admin=session.get('admin', False),
         username=session.get('user'),
     )
 
@@ -31,7 +31,7 @@ def global_jinja_injection():
 # region a
 @app.route('/', methods=['GET', 'POST', 'PUT'])
 @templated('index.html')
-def hello_world():
+def index():
     return dict()
 
 

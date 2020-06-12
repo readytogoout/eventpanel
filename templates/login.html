@@ -3,8 +3,30 @@
     Login
 {% endblock %}
 {% block content %}
-    <div id="logincomponent">
-        {% include "logincomponent.html" %}
+    <div id="logincomponent" class="centered-block">
+        <form action="{{ url_for('login') }}" class="bordered" method="post">
+            <input type="hidden" name="redirect" value="{{ request.args.get('redirect_to', '/') }}">
+            <fieldset>
+                <p>
+                    <label>
+                        Username
+                        <input type="text" name="username">
+                    </label>
+                </p>
+                <p>
+                    <label>
+                        Password
+                        <input type="password" name="password">
+                    </label>
+                </p>
+                <p>
+                    <input type="submit" name="submit" value="Log in">
+                </p>
+            </fieldset>
+        </form>
+        <p class="fill-block">
+            <a class="text-center" href="https://readytogoout.games/">Registriere dein Event auf unserer Hauptseite!</a>
+        </p>
     </div>
 {% endblock %}
 

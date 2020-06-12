@@ -1,0 +1,44 @@
+.centered-block {
+    display: block;
+    width: 50%;
+    min-width: 600px;
+    margin: 1em auto;
+}
+
+fieldset {
+    border: none;
+}
+
+.bordered {
+    border: 1px solid var(--rdy-green) !important;
+}
+
+label {
+    margin: 1em;
+    display: block;
+}
+
+input[type=text], input[type=password] {
+    display: block;
+    border: 0;
+    border-bottom: 1px solid var(--rdy-green);
+    font-size: inherit;
+    background: inherit;
+    color: var(--rdy-white);
+}
+
+input[type=submit], input[type=reset], button {
+    display: block;
+    margin: 1em auto;
+    font-size: inherit;
+    border: 0;
+    color: inherit;
+    padding: 0.5em;
+    background: var(--rdy-blue);
+}
+
+@media screen and (max-width: 600px) {
+    .centered-block {
+        min-width: 100vw;
+    }
+}

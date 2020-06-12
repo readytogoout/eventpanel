@@ -1,5 +1,7 @@
-@import "menu.css";
 @import "../branding/css/colors.css";
+@import "menu.css";
+@import "login.css";
+
 body {
     background: var(--rdy-darkblue);
     color: var(--rdy-white);
@@ -11,4 +13,22 @@ body {
     box-sizing: border-box;
     padding: 0;
     margin: 0;
+}
+
+a:visited, a:focus, a:hover, a {
+    color: inherit;
+    text-decoration-color: var(--rdy-green);
+}
+
+
+.text-center {
+    margin-left: auto;
+    display: block;
+    margin-right: auto;
+    text-align: center;
+}
+
+.fill-block {
+    width: 100%;
+    padding: 1em;
 }

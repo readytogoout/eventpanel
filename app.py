@@ -86,6 +86,34 @@ def login_form():
     return render_template('login.html')
 
 
+@app.route('/registerInstance', methods=['POST'])
+@auth_required(requires_site_admin=True)
+def registerinstance():
+    instanceName = request.form.get('name')
+    hostname = request.form.get('hostname')
+    return "todo"
+
+
+@app.route('/registerEvent', methods=['POST'])
+@auth_required(requires_site_admin=True)
+def registerevent():
+    eventID = request.form.get('eventID')
+    eventName = request.form.get('name')
+    instanceID = request.form.get('instanceID')
+
+    return "todo"
+
+
+@app.route('/registerEventManager', methods=['POST'])
+@auth_required(requires_site_admin=True)
+def registerEventManager():
+    username = request.form.get('username')
+    password = "random"
+    email = request.form.get('email')
+
+    return "todo"
+
+
 # endregion a
 
 app.register_blueprint(get_admin_blueprint(app, db))

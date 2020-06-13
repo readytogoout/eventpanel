@@ -8,17 +8,17 @@ class Instance(db.Model):
     hostname = CharField()
 
 
+class Event(db.Model):
+    name = CharField()
+    event_id = IntegerField(primary_key=True)
+    instance = ForeignKeyField(Instance, backref='events')
+
+
 class EventManager(db.Model):
     username = CharField(primary_key=True)
     password = CharField()
     site_admin = BooleanField(default=False)
     email = CharField()
-
-
-class Event(db.Model):
-    name = CharField()
-    event_id = IntegerField(primary_key=True)
-    instance = ForeignKeyField(Instance, backref='events')
 
 
 class EventManagerRelation(db.Model):

@@ -12,9 +12,9 @@ def get_blueprint():
     @templated('event/admin.html')
     def admin(event_id: int):
         e: Event = Event.get_or_none(event_id)
-        i: Instance = Instance.get(Instance.name == e.instance)
         if e is None:
             abort(404)
+        i: Instance = Instance.get(Instance.name == e.instance)
         return dict(name=e.name, event_id=e.event_id, instance=i.name, instance_host=i.hostname)
 
     return blueprint

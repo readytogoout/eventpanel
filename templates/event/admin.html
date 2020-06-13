@@ -3,5 +3,17 @@
     Event {{ name }} - Admin
 {% endblock %}
 {% block content %}
-    <!-- TODO show managers and settings. Add manager option?-->
+    <div class="infobar">
+        <table>
+            <tr>
+                <th>Event Name</th>
+                <td>{{ name }}</td>
+            </tr>
+            <tr>
+                <th>Hosted On</th>
+                <td><a href="https://{{ instance_host }}">{{ instance }}</a></td>
+            </tr>
+        </table>
+    </div>
+    <!-- TODO show managers and settings. Add manager option? -->
 {% endblock %}

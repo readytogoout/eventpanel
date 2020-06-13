@@ -3,6 +3,19 @@ from peewee import *
 from app import db
 
 
+class EnumField(CharField):
+    def __init__(self, enum_class, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.enum_class = enum_class
+        self.max_length = 255
+
+    def db_value(self, value):
+        return value.name
+
+    def python_value(self, value):
+        return self.enum_class(value)
+
+
 class Instance(db.Model):
     name = CharField(primary_key=True)
     hostname = CharField()
@@ -11,6 +24,7 @@ class Instance(db.Model):
 class Event(db.Model):
     name = CharField()
     event_id = IntegerField(primary_key=True)
+    registration_link = CharField(unique=True, null=True)
     instance = ForeignKeyField(Instance, backref='events')
 
 

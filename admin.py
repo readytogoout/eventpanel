@@ -1,12 +1,11 @@
 from collections import defaultdict
 
-from flask import Flask, Blueprint, abort
-from flask_peewee.db import Database
+from flask import Blueprint, abort, request, flash, redirect, url_for
 
 from util import auth_required, templated
 
 
-def get_blueprint(app: Flask, db: Database) -> Blueprint:
+def get_blueprint() -> Blueprint:
     from database import Instance, EventManagerRelation, Event
     blueprint = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -16,6 +15,43 @@ def get_blueprint(app: Flask, db: Database) -> Blueprint:
     def index():
         instance_list = list(Instance.select(Instance.hostname, Instance.name).namedtuples())
         return dict(instances=instance_list)
+
+    @blueprint.route('/event/', methods=['POST'])
+    @auth_required(requires_site_admin=True)
+    def register_event():
+        eventID = request.form.get('eventID')
+        eventName = request.form.get('name')
+        instanceID = request.form.get('instanceID')
+
+        return "todo"
+
+    @blueprint.route('/event-manager/', methods=['POST'])
+    @auth_required(requires_site_admin=True)
+    def registerEventManager():
+        username = request.form.get('username')
+        password = "random"
+        email = request.form.get('email')
+
+        return "todo"
+
+    @blueprint.route('/instance/', methods=['POST'])
+    @auth_required(requires_site_admin=True)
+    def register_instance():
+        instance_name = request.form.get('name')
+        if not instance_name:
+            flash('Missing Name')
+            return redirect(url_for('.index'))  # todo: redirect to creation form
+
+        hostname = request.form.get('hostname')
+        if not hostname:
+            flash('Missing hostname')
+            return redirect(url_for('.index'))  # todo: redirect to creation form
+
+        i, created = Instance.get_or_create(name=instance_name, hostname=hostname)
+        if not created:
+            flash('This instance name is already in use.')
+            return redirect(url_for('.index'))
+        return redirect(url_for('.instance_details', instance_id=instance_name))
 
     @blueprint.route('/instance/<instance_id>')
     @auth_required(requires_site_admin=True)

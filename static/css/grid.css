@@ -2,6 +2,20 @@
     display: flex;
     flex-wrap: wrap;
 }
+
 .multipanel > * {
     margin: 1em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 1em;
+    color: var(--rdy-green);
+}
+
+.infobar {
+    width: 100%;
+    background: var(--rdy-blue);
+    border-bottom: 1px solid var(--rdy-green);
+    margin: 0;
+    padding: 1em;
 }

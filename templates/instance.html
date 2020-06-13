@@ -3,11 +3,23 @@
     Instance {{ name }}
 {% endblock %}
 {% block content %}
+    <div class="infobar">
+        <table>
+            <tr>
+                <th>Name</th>
+                <td>{{ name }}</td>
+            </tr>
+            <tr>
+                <th>Hostname</th>
+                <td><a href="http://{{ hostname }}"><pre>{{ hostname }}</pre></a></td>
+            </tr>
+        </table>
+    </div>
     <div class="multipanel">
         <table class="bordered event-list">
             <thead>
             <tr>
-                <td colspan="3">Events</td>
+                <th colspan="3">Events</th>
             </tr>
             <tr>
                 <td>Event Id</td>
@@ -28,8 +40,11 @@
                         </ul>
                     </td>
                 </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">No Events yet</td>
+                </tr>
             {% endfor %}
-
             </tbody>
         </table>
     </div>

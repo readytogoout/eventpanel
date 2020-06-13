@@ -23,5 +23,27 @@
         <div>
             Placeholder to test multipanel
         </div>
+        <div class="instance-form bordered">
+            <h3 class="text-center">Register Instance</h3>
+            <form method="post" action="{{ url_for('admin.register_instance') }}">
+                <fieldset>
+                    <p>
+                        <label>
+                            Instance Name
+                            <input type="text" name="name">
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            Instance Hostname
+                            <input type="text" name="hostname">
+                        </label>
+                    </p>
+                    <p>
+                        <input type="submit" name="submit" value="Register Instance">
+                    </p>
+                </fieldset>
+            </form>
+        </div>
     </div>
 {% endblock %}

@@ -1,7 +1,9 @@
 .instance-list {
     max-width: 30em;
 }
-
+.instance-form {
+    max-width: 30em;
+}
 .event-list {
     max-width: 80em;
 }

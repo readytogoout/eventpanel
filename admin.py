@@ -1,8 +1,11 @@
 from collections import defaultdict
 
 from flask import Blueprint, abort, request, flash, redirect, url_for
+from peewee import JOIN
 
 from util import auth_required, templated
+
+
 
 
 def get_blueprint() -> Blueprint:
@@ -19,15 +22,14 @@ def get_blueprint() -> Blueprint:
     @blueprint.route('/event/', methods=['POST'])
     @auth_required(requires_site_admin=True)
     def register_event():
-        eventID = request.form.get('eventID')
-        eventName = request.form.get('name')
-        instanceID = request.form.get('instanceID')
-
-        return "todo"
+        event_name = request.form.get('name')
+        instance_id = request.form.get('instance')
+        e = Event.create(name=event_name, instance=instance_id)
+        return redirect(url_for('event.admin', event_id=e.event_id))
 
     @blueprint.route('/event-manager/', methods=['POST'])
     @auth_required(requires_site_admin=True)
-    def registerEventManager():
+    def register_event_manager():
         username = request.form.get('username')
         password = "random"
         email = request.form.get('email')
@@ -62,7 +64,8 @@ def get_blueprint() -> Blueprint:
         if i is None:
             return abort(404)  # todo 404 handler
         event_list = list(Event.select(Event, EventManagerRelation.manager)
-                          .join(EventManagerRelation, on=EventManagerRelation.event == Event.event_id)
+                          .join(EventManagerRelation, on=EventManagerRelation.event == Event.event_id,
+                                join_type=JOIN.LEFT_OUTER)
                           .where(Event.instance == instance_id)
                           .group_by(Event.event_id)
                           .namedtuples())

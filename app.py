@@ -8,6 +8,7 @@ from flask import Flask, render_template, redirect, request, flash, url_for, ses
 from flask_peewee.db import Database
 
 from admin import get_blueprint as get_admin_blueprint
+from event import get_blueprint as get_event_blueprint
 from util import auth_required, templated
 
 app = Flask(__name__)
@@ -87,7 +88,7 @@ def login_form():
 
 
 # endregion a
-
+app.register_blueprint(get_event_blueprint())
 app.register_blueprint(get_admin_blueprint())
 
 

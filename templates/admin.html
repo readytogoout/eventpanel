@@ -45,5 +45,35 @@
                 </fieldset>
             </form>
         </div>
+        <div class="instance-form bordered">
+            <h3 class="text-center">Register Event</h3>
+            <form method="post" action="{{ url_for('admin.register_event') }}">
+                <fieldset>
+                    <p>
+                        <label>
+                            Event Name
+                            <input type="text" name="name">
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            Instance Hostname
+                            <select name="instance">
+                                {% for instance in instances %}
+                                    <option value="{{ instance.name }}">
+                                        {{ instance.name }}(<pre>{{ instance.hostname }}</pre>)
+                                    </option>
+                                {% endfor %}
+
+                            </select>
+                        </label>
+                    </p>
+                    <p>
+                        <input type="submit" name="submit" value="Register Instance">
+                    </p>
+                </fieldset>
+            </form>
+
+        </div>
     </div>
 {% endblock %}

@@ -9,7 +9,7 @@ from flask_peewee.db import Database
 
 from admin import get_blueprint as get_admin_blueprint
 from event import get_blueprint as get_event_blueprint
-from util import auth_required, templated
+from util import auth_required, templated, logout
 
 app = Flask(__name__)
 app.config.from_json('data/config.json')
@@ -18,7 +18,6 @@ db = Database(app)
 
 # noinspection PyUnresolvedReferences
 import database as models
-
 
 @app.context_processor
 def global_jinja_injection():
@@ -57,7 +56,6 @@ def register_user(username: str, email: str, plain_password: str, site_admin: bo
                                       site_admin=site_admin)
 
 
-# TODO: sessioncookie
 @app.route('/login', methods=['POST'])
 def login():
     username = request.form.get('username')
@@ -91,6 +89,12 @@ def login_form():
 app.register_blueprint(get_event_blueprint())
 app.register_blueprint(get_admin_blueprint())
 
+@app.route('/logout', methods=['GET'])
+@auth_required()
+@templated('logout.html')
+def logout_handler():
+    logout()
+    return dict()
 
 @app.cli.command('clear-db', help='Obliterate the database file')
 def clear_db_command():

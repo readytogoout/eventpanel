@@ -49,3 +49,7 @@ def templated(template):
         return decorated_function
 
     return wrapper
+
+def logout():
+    session.pop("admin")
+    session.pop("username")

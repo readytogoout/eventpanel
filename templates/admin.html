@@ -14,12 +14,15 @@
             <tbody>
             {% for instance in instances %}
                 <tr>
-                    <td>{{ instance.name }}</td>
+                    <td>
+                        <a href="{{ url_for('admin.instance_details', instance_id=instance.name) }}">{{ instance.name }}</a>
+                    </td>
                     <td>{{ instance.hostname }}</td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
+        <!-- todo: Globale event liste -->
         <table class="bordered instance-list"><!-- Reusing classes, aren't we? -->
             <thead>
             <tr>

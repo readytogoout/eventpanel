@@ -34,7 +34,7 @@
             <tbody>
             {% for event in events %}
                 <tr>
-                    <td>{{ event.event_id }}</td>
+                    <td><a href="{{ url_for('event.admin', event_id=event.event_id) }}">{{ event.event_id }}</a></td>
                     <td>{{ event.name }}</td>
                     <td>
                         <ul class="manager-list">

@@ -11,7 +11,12 @@
             </tr>
             <tr>
                 <th>Hosted On</th>
-                <td><a href="https://{{ instance_host }}">{{ instance }}</a></td>
+                <td>
+                    <a href="https://{{ instance_host }}">{{ instance }}</a>
+                    {% if is_admin %}
+                        <a href="{{ url_for('admin.instance_details', instance_id=instance) }}">(Admin Panel)</a>
+                    {% endif %}
+                </td>
             </tr>
         </table>
     </div>

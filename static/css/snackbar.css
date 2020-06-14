@@ -1,0 +1,50 @@
+.flashes {
+    position: fixed;
+    z-index: 10;
+
+    bottom: 2%;
+    left: 0;
+
+    width: 70%;
+    margin-left: 15%;
+
+    padding-top: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 1.5em;
+
+    -webkit-animation: fadeout 1s 2s;
+    -webkit-animation-fill-mode: forwards;
+
+    animation: fadeout 1s 2s;
+    animation-fill-mode: forwards;
+}
+
+.flashes .flash {
+    padding: 0.5% 0;
+    margin-bottom: 1em;
+    display: block;
+    width: 100%;
+    text-align: center;
+    border-radius: 0.75em;
+}
+
+/* No category*/
+.flashes .flash-message {
+    background-color: rgba(127, 127, 127, 0.75);
+}
+
+.flashes .flash-error {
+    background-color: rgba(255, 0, 0, 0.75);
+}
+.flashes .flash-warning {
+    background-color: rgba(255, 213, 0, 0.75);
+}
+
+@keyframes fadeout {
+    from {opacity: 1;}
+    to {opacity: 0;}
+    animation
+}

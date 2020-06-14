@@ -4,6 +4,7 @@
 @import "grid.css";
 @import "table.css";
 @import "instances.css";
+@import "snackbar.css";
 
 body {
     background: var(--rdy-darkblue);

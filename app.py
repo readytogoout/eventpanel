@@ -33,6 +33,9 @@ def global_jinja_injection():
 @app.route('/', methods=['GET', 'POST', 'PUT'])
 @templated('index.html')
 def index():
+    flash("Hallo Welt")
+    flash("ICH BIN EIN FEHLER", "error")
+    flash("Oh doch nicht <3", "warning")
     return dict()
 
 

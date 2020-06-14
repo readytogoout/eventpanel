@@ -44,6 +44,9 @@
             {% else %}
                 <li><a href="{{ url_for('login_form') }}">Login</a></li>
             {% endif %}
+            {% block navbar %}
+                <!--Navbar elements-->
+            {% endblock %}
             <li><a href="mailto:kontakt@readytogoout.games">Contact</a></li>
         </ul>
     </nav>

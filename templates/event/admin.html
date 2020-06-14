@@ -2,6 +2,11 @@
 {% block title %}
     Event {{ name }} - Admin
 {% endblock %}
+
+{% block navbar %}
+<li><a href="{{ url_for('login_form') }}">Login</a></li>
+{% endblock %}
+
 {% block content %}
     <div class="infobar">
         <table>
@@ -20,5 +25,7 @@
             </tr>
         </table>
     </div>
+
+
     <!-- TODO show managers and settings. Add manager option? -->
 {% endblock %}

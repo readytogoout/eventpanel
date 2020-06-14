@@ -50,6 +50,3 @@ def templated(template):
 
     return wrapper
 
-def logout():
-    session.pop("admin")
-    session.pop("username")

@@ -1,5 +1,6 @@
 import base64
 import hashlib
+import random
 
 import bcrypt
 import click
@@ -26,6 +27,7 @@ def global_jinja_injection():
         logged_in='username' in session,
         is_admin=session.get('admin', False),
         username=session.get('user'),
+        wins_legit_iphone=random.randint(0, 200) == 42,
     )
 
 
@@ -93,12 +95,14 @@ def login_form():
 app.register_blueprint(get_event_blueprint())
 app.register_blueprint(get_admin_blueprint())
 
+
 @app.route('/logout', methods=['GET'])
 @auth_required()
 @templated('logout.html')
 def logout():
     session.clear()
     return dict()
+
 
 @app.cli.command('clear-db', help='Obliterate the database file')
 def clear_db_command():

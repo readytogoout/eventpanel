@@ -6,8 +6,6 @@ from peewee import JOIN
 from util import auth_required, templated
 
 
-
-
 def get_blueprint() -> Blueprint:
     from database import Instance, EventManagerRelation, Event
     blueprint = Blueprint('admin', __name__, url_prefix='/admin')
@@ -42,14 +40,20 @@ def get_blueprint() -> Blueprint:
         instance_name = request.form.get('name')
         if not instance_name:
             flash('Missing Name')
-            return redirect(url_for('.index'))  # todo: redirect to creation form
+            return redirect(url_for('.index'))
+
+        api_key = request.form.get('api_key')
+        if not api_key:
+            flash("No API KEY")
+            return redirect(url_for('.index'))
 
         hostname = request.form.get('hostname')
         if not hostname:
             flash('Missing hostname')
-            return redirect(url_for('.index'))  # todo: redirect to creation form
+            return redirect(url_for('.index'))
 
-        i, created = Instance.get_or_create(name=instance_name, hostname=hostname)
+        i, created = Instance.get_or_create(name=instance_name, hostname=hostname,
+                                            api_key=api_key)
         if not created:
             flash('This instance name is already in use.')
             return redirect(url_for('.index'))
@@ -75,7 +79,8 @@ def get_blueprint() -> Blueprint:
             events=event_list,
             managers=managers,
             name=instance_id,
-            hostname=i.hostname
+            hostname=i.hostname,
+            api_key=i.api_key
         )
 
     return blueprint

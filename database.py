@@ -18,6 +18,7 @@ class EnumField(CharField):
 
 class Instance(db.Model):
     name = CharField(primary_key=True)
+    api_key = CharField()
     hostname = CharField()
 
 

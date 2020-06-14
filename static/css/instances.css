@@ -17,3 +17,12 @@
 .manager-list li:not(:first-child)::before {
     content: ", ";
 }
+
+.spoiler {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.spoiler:hover {
+    opacity: 1;
+}

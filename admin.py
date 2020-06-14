@@ -7,7 +7,7 @@ from util import auth_required, templated
 
 
 def get_blueprint() -> Blueprint:
-    from database import Instance, EventManagerRelation, Event
+    from database import Instance, EventManagerRelation, Event,EventManager
     blueprint = Blueprint('admin', __name__, url_prefix='/admin')
 
     @blueprint.route('/')
@@ -15,7 +15,9 @@ def get_blueprint() -> Blueprint:
     @templated('admin.html')
     def index():
         instance_list = list(Instance.select(Instance.hostname, Instance.name).namedtuples())
-        return dict(instances=instance_list)
+        manager_list = list(EventManager.select(
+            EventManager.username, EventManager.email, EventManager.site_admin).namedtuples())
+        return dict(instances=instance_list, managers=manager_list)
 
     @blueprint.route('/event/', methods=['POST'])
     @auth_required(requires_site_admin=True)

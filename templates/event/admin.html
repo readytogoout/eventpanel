@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-    Event {{ name }} - Admin
+    Event Adminpanel - {{ name }}
 {% endblock %}
 
 {% block navbar %}
@@ -28,4 +28,23 @@
 
 
     <!-- TODO show managers and settings. Add manager option? -->
+    <div class="multipanel">
+        <div class="instance-form bordered">
+            <h3 class="text-center">Add event admin</h3>
+            <form method="post" action="{{ url_for('event.add_event_manager', event_id=event_id) }}">
+                <fieldset>
+                    <p>
+                        <label>
+                            Username or Email
+
+                            <input type="text" name="admin-identifier">
+                        </label>
+                    </p>
+                    <p>
+                        <input type="submit" name="submit" value="Link User">
+                    </p>
+                </fieldset>
+            </form>
+        </div>
+    </div>
 {% endblock %}

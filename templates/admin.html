@@ -51,9 +51,6 @@
 
             </tbody>
         </table>
-        <div>
-            Placeholder to test multipanel
-        </div>
         <div class="instance-form bordered">
             <h3 class="text-center">Register Instance</h3>
             <form method="post" action="{{ url_for('admin.register_instance') }}">
@@ -105,6 +102,34 @@
                                 {% endfor %}
 
                             </select>
+                        </label>
+                    </p>
+                    <p>
+                        <input type="submit" name="submit" value="Register Event">
+                    </p>
+                </fieldset>
+            </form>
+        </div>
+        <div class="instance-form bordered">
+            <h3 class="text-center">Register User</h3>
+            <form method="post" action="{{ url_for('admin.create_user') }}">
+                <fieldset>
+                    <p>
+                        <label>
+                            Username
+                            <input type="text" name="username">
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            Email
+                            <input type="text" name="email">
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            Is Admin
+                            <input type="checkbox", name="is-admin">
                         </label>
                     </p>
                     <p>

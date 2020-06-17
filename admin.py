@@ -1,13 +1,15 @@
 from collections import defaultdict
 
+import peewee
 from flask import Blueprint, abort, request, flash, redirect, url_for
 from peewee import JOIN
 
-from util import auth_required, templated
+from util import auth_required, templated, pw_gen, register_user
+
 
 
 def get_blueprint() -> Blueprint:
-    from database import Instance, EventManagerRelation, Event,EventManager
+    from database import Instance, EventManagerRelation, Event, EventManager
     blueprint = Blueprint('admin', __name__, url_prefix='/admin')
 
     @blueprint.route('/')
@@ -29,12 +31,27 @@ def get_blueprint() -> Blueprint:
 
     @blueprint.route('/event-manager/', methods=['POST'])
     @auth_required(requires_site_admin=True)
-    def register_event_manager():
+    def create_user():
         username = request.form.get('username')
-        password = "random"
         email = request.form.get('email')
+        is_site_admin = request.form.get('is-admin')
+        password = "passwort"  # TODO pw_gen()
 
-        return "todo"
+        if not (username and email and is_site_admin):
+            flash('Please check you\'re input')
+            return redirect(url_for('admin.index'))
+
+
+        try:
+            EventManager.create(username=username, password=password, site_admin=is_site_admin, email=email)
+            register_user(username, email, password)
+            flash('Success')
+
+        except peewee.IntegrityError:
+            flash('Username is already taken!')
+
+        return redirect(url_for('admin.index'))
+
 
     @blueprint.route('/instance/', methods=['POST'])
     @auth_required(requires_site_admin=True)

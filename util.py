@@ -1,4 +1,10 @@
+import base64
 import functools
+import hashlib
+import random
+import string
+
+import bcrypt
 
 from flask import session, url_for, redirect, flash, request, render_template
 
@@ -50,3 +56,17 @@ def templated(template):
 
     return wrapper
 
+def pw_gen(pw_len=8, chars=string.ascii_letters + string.digits + string.punctuation):
+    return ''.join(random.choice(chars) for _ in range(pw_len))
+
+def pre_encode_password(password: str):
+    """
+    Still needs encoding using :meth:`bcrypt.hashpw`
+    """
+    return base64.b64encode(hashlib.sha256(password.encode(encoding='utf-8')).digest())
+
+def register_user(username: str, email: str, plain_password: str, site_admin: bool = False):
+    import database as models
+    return models.EventManager.create(username=username, email=email,
+                                      password=bcrypt.hashpw(pre_encode_password(plain_password), bcrypt.gensalt()),
+                                      site_admin=site_admin)

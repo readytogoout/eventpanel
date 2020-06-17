@@ -37,6 +37,9 @@ class EventManager(db.Model):
 
 
 class EventManagerRelation(db.Model):
+    class Meta:
+        primary_key = CompositeKey('manager', 'event')
+
     manager = ForeignKeyField(EventManager)
     event = ForeignKeyField(Event)
 

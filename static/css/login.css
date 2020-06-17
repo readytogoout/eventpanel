@@ -25,6 +25,7 @@ input[type=text], input[type=password] {
     font-size: inherit;
     background: inherit;
     color: var(--rdy-white);
+    margin-top: 0.2em;
 }
 
 input[type=submit], input[type=reset], button {

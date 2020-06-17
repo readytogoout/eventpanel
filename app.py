@@ -10,7 +10,7 @@ from flask_peewee.db import Database
 
 from admin import get_blueprint as get_admin_blueprint
 from event import get_blueprint as get_event_blueprint
-from util import auth_required, templated
+from util import auth_required, templated, register_user, pre_encode_password
 
 app = Flask(__name__)
 app.config.from_json('data/config.json')
@@ -47,19 +47,6 @@ def goodbye(u: int):
     print(u)
     flash(f'{u + 3}', category='error')
     return render_template('number.html', number=u)
-
-
-def pre_encode_password(password: str):
-    """
-    Still needs encoding using :meth:`bcrypt.hashpw`
-    """
-    return base64.b64encode(hashlib.sha256(password.encode(encoding='utf-8')).digest())
-
-
-def register_user(username: str, email: str, plain_password: str, site_admin: bool = False):
-    return models.EventManager.create(username=username, email=email,
-                                      password=bcrypt.hashpw(pre_encode_password(plain_password), bcrypt.gensalt()),
-                                      site_admin=site_admin)
 
 
 @app.route('/login', methods=['POST'])

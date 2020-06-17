@@ -1,0 +1,22 @@
+{% extends "mail/base.html" %}
+{% block title %}
+    Registration Successful
+{% endblock %}
+{% block content %}
+    <p>You have successfully registered as an Event Manager at <a href="https://readytogoout.games">Ready To Go Out.</a>
+    </p>
+    <div>
+        <p>Your Login Data is:</p>
+        <table>
+            <tr>
+                <th>Username</th>
+                <td>{{ username }}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{ password }}</td>
+            </tr>
+        </table>
+    </div>
+    <p>You can log in at <a href="https://events.readytogoout.games/">https://events.readytogoout.games/</a></p>
+{% endblock %}

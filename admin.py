@@ -34,16 +34,15 @@ def get_blueprint() -> Blueprint:
     def create_user():
         username = request.form.get('username')
         email = request.form.get('email')
-        is_site_admin = request.form.get('is-admin')
+        is_site_admin = bool(request.form.get('is-admin', False))
         password = "passwort"  # TODO pw_gen()
 
-        if not (username and email and is_site_admin):
+        if username is None or email is None or is_site_admin is None:
             flash('Please check you\'re input')
             return redirect(url_for('admin.index'))
 
 
         try:
-            EventManager.create(username=username, password=password, site_admin=is_site_admin, email=email)
             register_user(username, email, password)
             flash('Success')
 

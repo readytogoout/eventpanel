@@ -96,6 +96,7 @@ class Mailsender:
             self.smtp.login(current_app.config['GMAIL']['username'],
                             current_app.config['GMAIL']['password'])
             self.from_email = current_app.config['GMAIL']['from']
+            self.log = False
         else:
             self.smtp = None
             self.log = True

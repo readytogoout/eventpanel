@@ -1,0 +1,23 @@
+{% extends "mail/base.html" %}
+{% block content %}
+    <p>A new application was sent by {{ application.first_name }} {{ application.last_name }}.</p>
+    <div>
+        <table>
+            <tr>
+                <th>Email</th>
+                <td><a href="mailto:{{ application.mail }}">{{ application.email }}</a></td>
+            </tr>
+            <tr>
+                <th>Count</th>
+                <td>{{ application.count }}</td>
+            </tr>
+            <tr>
+                <th colspan="2">Their Message</th>
+            </tr>
+            <tr>
+                <td colspan="2"><pre>{{ application.message }}</pre></td>
+            </tr>
+        </table>
+    </div>
+
+{% endblock %}

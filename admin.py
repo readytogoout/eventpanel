@@ -29,6 +29,11 @@ def get_blueprint() -> Blueprint:
         e = Event.create(name=event_name, instance=instance_id)
         return redirect(url_for('event.admin', event_id=e.event_id))
 
+    @blueprint.route('/application/<application_id>')
+    @auth_required(requires_site_admin=True)
+    def application(application_id: str):
+        return str(application_id)
+
     @blueprint.route('/event-manager/', methods=['POST'])
     @auth_required(requires_site_admin=True)
     def create_user():

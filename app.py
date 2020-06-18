@@ -1,5 +1,3 @@
-import base64
-import hashlib
 import random
 
 import bcrypt
@@ -10,6 +8,7 @@ from flask_peewee.db import Database
 
 from admin import get_blueprint as get_admin_blueprint
 from event import get_blueprint as get_event_blueprint
+from mailing import Mailsender, ApplicationSentMail, NewApplicationMail
 from util import auth_required, templated, register_user, pre_encode_password
 
 app = Flask(__name__)
@@ -71,6 +70,34 @@ def login():
     else:
         flash("Invalid password", category="error")
         return redirect(url_for('login_form'))
+
+
+@app.route('/apply', methods=['POST'])
+def apply():
+    first_name = request.form.get('first_name')
+    last_name = request.form.get('last_name')
+    email = request.form.get('email')
+    persons = request.form.get('persons')
+    message = request.form.get('message', '')
+    if not all([first_name, last_name, email, persons]):
+        return redirect('https://readytogoout.games/#invalidapplication')
+
+    application = models.Application.create(
+        first_name=first_name,
+        last_name=last_name,
+        email=email,
+        count=persons,
+        message=message,
+    )
+    with Mailsender():
+        ApplicationSentMail().send(email)
+        NewApplicationMail().send('kontakt@readytogoout.games', application)
+    return redirect('https://readytogoout.games/mailsuccess/')
+
+
+@app.route('/apply', methods=['GET'])
+def apply_redirect():
+    return redirect('https://readytogoout.games/')
 
 
 @app.route('/login', methods=['GET'])

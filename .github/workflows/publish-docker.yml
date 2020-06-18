@@ -1,0 +1,22 @@
+on:
+  push:
+    tags:
+      - 'v*'
+
+name: Auto Publish to Docker
+jobs:
+  build:
+    name: Auto Publish to Github Packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@master
+      - name: Publish Docker image
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          repository: readytogoout/eventpanel/flask
+          tag_with_ref: true
+          tags: latest

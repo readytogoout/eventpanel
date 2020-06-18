@@ -12,7 +12,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@master
         with:
-          recursive: true
+          submodules: recursive
       - name: Publish Docker image
         uses: docker/build-push-action@v1
         with:

@@ -87,7 +87,7 @@ class NewApplicationMail(Mailjob):
 
 class Mailsender:
     def __init__(self):
-        if current_app.config['GMAIL'] == 'log':
+        if current_app.config['GMAIL'] != 'log':
             self.smtp = SMTP(
                 host='smtp.gmail.com',
                 port=587,

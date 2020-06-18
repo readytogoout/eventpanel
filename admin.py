@@ -4,7 +4,7 @@ import peewee
 from flask import Blueprint, abort, request, flash, redirect, url_for
 from peewee import JOIN
 
-from mailing import Mailsender
+from mailing import Mailsender, RegistrationMail
 from util import auth_required, templated, register_user
 
 
@@ -47,7 +47,7 @@ def get_blueprint() -> Blueprint:
         except peewee.IntegrityError:
             flash('Username is already taken!')
         with Mailsender() as sender:
-            sender.send_registration_email(email, username, password)
+            RegistrationMail(sender).send(email, username, password)
 
         return redirect(url_for('admin.index'))
 

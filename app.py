@@ -34,15 +34,17 @@ def global_jinja_injection():
 @app.route('/', methods=['GET', 'POST', 'PUT'])
 @templated('index.html')
 def index():
-    username = session['username']
-    event_list = list(models.EventManagerRelation.select(models.Event.name, models.Event.event_id)
+    if 'username' in session:
+        username = session['username']
+        event_list = list(models.EventManagerRelation.select(models.Event.name, models.Event.event_id)
                         .join(models.Event, on=models.Event.event_id == models.EventManagerRelation.event_id)
                         .where(models.EventManagerRelation.manager == username)
                         .namedtuples()
                         )
-    print(event_list)
-    return dict(events=event_list)
-
+        print(event_list)
+        return dict(events=event_list)
+    else:
+        return dict()
 
 @app.route('/<int:u>')
 @auth_required()

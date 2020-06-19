@@ -23,16 +23,17 @@
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
         <div class=flashes>
-        {% for category, message in messages %}
-            <span class="flash flash-{{ category }}">{{ message }}</span>
-        {% endfor %}
+            {% for category, message in messages %}
+                <span class="flash flash-{{ category }}">{{ message }}</span>
+            {% endfor %}
         </div>
     {% endif %}
 {% endwith %}
 <header>
     <div class="navigation-toggle" id="navigation-toggle"><i class="gg-menu"></i></div>
     <nav class="navigation-container navigation-collapsed" id="navigation-container">
-        <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='branding/png/logo_schrift.png') }}" alt="logo" class="logo"></a>
+        <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='branding/png/logo_schrift.png') }}"
+                                              alt="logo" class="logo"></a>
         <ul class="navigation-list" id="navigation-list">
             <li><a href="{{ url_for('index') }}">Home</a></li>
             {% if is_admin %}
@@ -48,6 +49,7 @@
                 <!--Navbar elements-->
             {% endblock %}
             <li><a href="mailto:kontakt@readytogoout.games">Contact</a></li>
+            <li><a href="{{ url_for('info') }}">Info</a></li>
         </ul>
     </nav>
 </header>

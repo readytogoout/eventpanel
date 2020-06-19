@@ -1,15 +1,19 @@
 import random
+from sqlite3 import sqlite_version as SQLITE_VERSION
+from sys import version as PYTHON_VERSION
 
 import bcrypt
 import click
 import peewee
 from flask import Flask, render_template, redirect, request, flash, url_for, session
+from flask import __version__ as FLASK_VERSION
 from flask_peewee.db import Database
 
 from admin import get_blueprint as get_admin_blueprint
 from event import get_blueprint as get_event_blueprint
 from mailing import Mailsender, ApplicationSentMail, NewApplicationMail
 from util import auth_required, templated, register_user, pre_encode_password
+from version import VERSION as EVENTPANEL_VERSION
 
 app = Flask(__name__)
 app.config.from_json('data/config.json')
@@ -37,14 +41,29 @@ def index():
     if 'username' in session:
         username = session['username']
         event_list = list(models.EventManagerRelation.select(models.Event.name, models.Event.event_id)
-                        .join(models.Event, on=models.Event.event_id == models.EventManagerRelation.event_id)
-                        .where(models.EventManagerRelation.manager == username)
-                        .namedtuples()
-                        )
+                          .join(models.Event, on=models.Event.event_id == models.EventManagerRelation.event_id)
+                          .where(models.EventManagerRelation.manager == username)
+                          .namedtuples()
+                          )
         print(event_list)
         return dict(events=event_list)
     else:
         return dict()
+
+
+@app.route('/info')
+@templated('info.html')
+def info():
+    return dict(
+        versions=dict(
+            eventpanel=EVENTPANEL_VERSION,
+            python=PYTHON_VERSION,
+            flask=FLASK_VERSION,
+            sqlite_driver=SQLITE_VERSION,
+            sqlite='.'.join(map(str, models.db.database.server_version)),
+        )
+    )
+
 
 @app.route('/<int:u>')
 @auth_required()

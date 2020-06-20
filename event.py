@@ -42,4 +42,18 @@ def get_blueprint():
 
         return redirect(url_for(".admin", event_id=event_id))
 
+    @blueprint.route('/<int:event_id>/admin/eventattendee', methods=['POST'])
+    @auth_required(has_access_to_event('event_id'))
+    def add_event_attendee(self, event_id):
+        # TODO
+        return redirect(url_for(".admin", event_id=event_id))
+
+    @blueprint.route('/<int:event_id>/admin/eventgroup', methods=['POST'])
+    @auth_required(has_access_to_event('event_id'))
+    def add_event_group(self, event_id):
+        # You guessed it: TODO
+        return redirect(url_for(".admin", event_id=event_id))
     return blueprint
+
+
+

@@ -46,5 +46,53 @@
                 </fieldset>
             </form>
         </div>
+        <div class="event-list bordered">
+            <h3 class="text-center">Add an attendee</h3>
+            <form method="post" action="{{ url_for('event.add_event_attendee', event_id=event_id) }}">
+                <fieldset>
+                    <p>
+                        <label>
+                            Username
+
+                            <input type="text" name="username">
+                        </label>
+                        <label>
+                            Email
+
+                            <input type="text" name="email">
+                        </label>
+                        <label>
+                            Group
+
+                            <select name="instance">
+                                    <option value="Gruppenname">
+                                        Gruppenname (TODO)
+                                    </option>
+                            </select>
+                        </label>
+                    </p>
+                    <p>
+                        <input type="submit" name="submit" value="Create">
+                    </p>
+                </fieldset>
+            </form>
+        </div>
+        <div class="event-list bordered">
+            <h3 class="text-center">Create a group</h3>
+            <form method="post" action="{{ url_for('event.add_event_group', event_id=event_id) }}">
+                <fieldset>
+                    <p>
+                        <label>
+                            Groupname
+
+                            <input type="text" name="username">
+                        </label>
+                    </p>
+                    <p>
+                        <input type="submit" name="submit" value="Create">
+                    </p>
+                </fieldset>
+            </form>
+
     </div>
 {% endblock %}

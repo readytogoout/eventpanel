@@ -17,7 +17,6 @@
                     </tr>
                 </thead>
                 {% for event in events %}
-                    intell
                     <tr>
                         <td><a href="{{ url_for('event.admin', event_id=event.event_id) }}">{{ event.name }}</a></td>
                     </tr>

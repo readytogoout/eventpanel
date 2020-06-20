@@ -6,7 +6,7 @@ class RdyApi:
     def __init__(self, hostname: str, api_key: str):
         self.hostname = hostname
         self.session = requests.Session()
-        self.session.headers.update(dict(
+        self.session.cookies.update(dict(
             session=api_key
         ))
 
@@ -28,6 +28,11 @@ class RdyApi:
 
     def get_users(self):
         res = self.session.get(f'https://{self.hostname}/admin/users')
+        res.raise_for_status()
+        return res.json()
+
+    def get_groups(self):
+        res = self.session.get(f'https://{self.hostname}/admin/groups')
         res.raise_for_status()
         return res.json()
 

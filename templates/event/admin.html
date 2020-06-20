@@ -57,17 +57,13 @@
                             <input type="text" name="username">
                         </label>
                         <label>
-                            Email
-
-                            <input type="text" name="email">
-                        </label>
-                        <label>
                             Group
-
-                            <select name="instance">
-                                    <option value="Gruppenname">
-                                        Gruppenname (TODO)
-                                    </option>
+                            <select name="group-id">
+                            {% for group in groups %}
+                                <option value="{{ group.groupId }}">
+                                    {{ group.groupName }}
+                                </option>
+                            {% endfor %}
                             </select>
                         </label>
                     </p>
@@ -85,7 +81,7 @@
                         <label>
                             Groupname
 
-                            <input type="text" name="username">
+                            <input type="text" name="groupname">
                         </label>
                     </p>
                     <p>

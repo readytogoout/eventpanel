@@ -56,14 +56,21 @@ def templated(template):
 
     return wrapper
 
-def pw_gen(pw_len=8, chars=string.ascii_letters + string.digits + string.punctuation):
+
+def pw_gen(pw_len=8, use_special_chars=True):
+    chars = string.ascii_letters + string.digits
+    if use_special_chars:
+        chars += string.punctuation
+
     return ''.join(random.choice(chars) for _ in range(pw_len))
+
 
 def pre_encode_password(password: str):
     """
     Still needs encoding using :meth:`bcrypt.hashpw`
     """
     return base64.b64encode(hashlib.sha256(password.encode(encoding='utf-8')).digest())
+
 
 def register_user(username: str, email: str, plain_password: str, site_admin: bool = False):
     import database as models

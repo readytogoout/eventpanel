@@ -40,7 +40,7 @@ def get_blueprint() -> Blueprint:
         username = request.form.get('username')
         email = request.form.get('email')
         is_site_admin = bool(request.form.get('is-admin', False))
-        password = "passwort"  # TODO pw_gen()
+        password = "passwort"  # TODO pw_gen(8)
 
         if username is None or email is None or is_site_admin is None:
             flash('Please check you\'re input')

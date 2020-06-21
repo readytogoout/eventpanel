@@ -110,7 +110,7 @@
                             <td>
                                 {{ group.groupName }}
                             </td>
-                            <td onclick='copyText("{{ group.groupId }}")'>
+                            <td onclick='copyText(convertToGroupInvitationLink("{{ group.groupId }}"))'>
                                 <p id="{{ group.groupId }}">Copy Link</p> <!--{{ group.groupId }}-->
                             </td>
                         </tr>
@@ -123,9 +123,12 @@
 
 {% block scripts %}
 <script>
+    function convertToGroupInvitationLink(groupId) {
+        //TODO: change to https
+        return "http://" + location.host + "/event/registerattendee?group-id=" + groupId;
+    }
     function copyText(text) {
-        link = "http://" + location.host + "/groupinvitation/" + text;
-        navigator.clipboard.writeText(link);
+        navigator.clipboard.writeText(text);
     }
 </script>
 {% endblock %}

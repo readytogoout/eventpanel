@@ -5,7 +5,7 @@ from sys import version as PYTHON_VERSION
 import bcrypt
 import click
 import peewee
-from flask import Flask, render_template, redirect, request, flash, url_for, session
+from flask import Flask, render_template, redirect, request, flash, url_for, session, abort
 from flask import __version__ as FLASK_VERSION
 from flask_peewee.db import Database
 
@@ -129,13 +129,6 @@ def apply_redirect():
 @app.route('/login', methods=['GET'])
 def login_form():
     return render_template('login.html')
-
-@app.route('/groupinvitation/<string:groupId>', methods=['GET'])
-def send_group_invitation_form(groupId):
-    return render_template('invitation system/invitation.html',
-                           groupId=groupId
-                           )
-
 
 # endregion a
 app.register_blueprint(get_event_blueprint())

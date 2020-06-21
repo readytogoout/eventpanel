@@ -1,3 +1,5 @@
+import json
+
 import peewee
 import requests
 from flask import Blueprint, abort, request, flash, redirect, url_for, request
@@ -7,7 +9,7 @@ from rdyapi import RdyApi
 
 
 def get_blueprint():
-    from database import Event, Instance, EventManagerRelation, EventManager, EventAttendee, Groups
+    from database import Event, Instance, EventManagerRelation, EventManager, EventAttendee, Groups, DoesNotExist
     blueprint = Blueprint('event', __name__, url_prefix='/event')
 
     @blueprint.route('/<int:event_id>/admin')
@@ -18,13 +20,23 @@ def get_blueprint():
         if e is None:
             abort(404)
 
-        i: Instance = Instance.get(Instance.name == e.instance)
-        api = RdyApi(i.hostname, i.api_key)
+        try:
+            i: Instance = Instance.get(Instance.name == e.instance)
+
+            api = RdyApi(i.hostname, i.api_key)
+            groups = api.get_groups()
+
+        except json.decoder.JSONDecodeError:
+            abort(500, 'API Key invalid!')
+
+        except DoesNotExist:
+            abort(500, 'Instance does not Exist!')
+
         return dict(name=e.name,
                     event_id=e.event_id,
                     instance=i.name,
                     instance_host=i.hostname,
-                    groups=api.get_groups()
+                    groups=groups
                     )
 
     @blueprint.route('/<int:event_id>/admin/eventmanager', methods=['POST'])
@@ -75,6 +87,8 @@ def get_blueprint():
             flash("Server not reachable!", 'error')
         except Exception as e:
             flash("Server error!", 'error')
+        except json.decoder.JSONDecodeError:
+            flash('API Key invalid!', 'error')
 
         try:
             EventAttendee.create(name=username,
@@ -95,7 +109,7 @@ def get_blueprint():
                     .namedtuples())
 
         groupname = request.form.get('groupname')
-        groupId = pw_gen(pw_len=128, use_special_chars=False) # actually a group ID xD
+        groupId = pw_gen(pw_len=32, use_special_chars=False) # actually a group ID xD
 
         try:
             api = RdyApi(instance[0].hostname, instance[0].api_key)
@@ -109,6 +123,28 @@ def get_blueprint():
             flash("Server error!", 'error')
 
         return redirect(url_for(".admin", event_id=event_id))
+
+    @blueprint.route('/eventinvitation/<string:event_id>', methods=['GET'])
+    def eventinvitation(event_id):
+        # create group
+        return None
+
+    @blueprint.route('/registerattendee')
+    @templated('invitation system/group.html')
+    def registerattendee():
+        groupId = request.args.get('group-id')
+        if not groupId is None:
+            group = Groups.get_or_none((Groups.group_id == groupId))
+            if group is None:
+                # group-id not in database -> abort
+                abort(404)
+            else:
+                event = Event.get_or_none(Event.event_id == group.event_id)
+        else:
+            abort(400)
+
+        return dict(group=group,
+                    event=event)
 
     return blueprint
 

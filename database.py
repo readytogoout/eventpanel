@@ -25,7 +25,7 @@ class Instance(db.Model):
 class Event(db.Model):
     name = CharField()
     event_id = IntegerField(primary_key=True)
-    registration_link = CharField(unique=True, null=True)
+    registration_id = CharField(unique=True, null=True)
     instance = ForeignKeyField(Instance, backref='events')
 
 

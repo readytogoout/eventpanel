@@ -39,7 +39,12 @@ def get_blueprint() -> Blueprint:
     def create_user():
         username = request.form.get('username')
         email = request.form.get('email')
-        is_site_admin = bool(request.form.get('is-admin', False))
+        is_site_admin = request.form.get('is-admin')
+        if is_site_admin == 'on':
+            is_site_admin = True
+        else:
+            is_site_admin = False
+
         password = "passwort"  # TODO pw_gen(8)
 
         if username is None or email is None or is_site_admin is None:
@@ -47,7 +52,7 @@ def get_blueprint() -> Blueprint:
             return redirect(url_for('admin.index'))
 
         try:
-            register_eventmanager(username, email, password)
+            register_eventmanager(username, email, password, site_admin=is_site_admin)
             flash('Success')
         except peewee.IntegrityError:
             flash('Username is already taken!')

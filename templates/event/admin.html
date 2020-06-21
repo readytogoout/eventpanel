@@ -27,25 +27,7 @@
     </div>
 
 
-    <!-- TODO show managers and settings. Add manager option? -->
     <div class="multipanel">
-        <div class="instance-form bordered">
-            <h3 class="text-center">Add event admin</h3>
-            <form method="post" action="{{ url_for('event.add_event_manager', event_id=event_id) }}">
-                <fieldset>
-                    <p>
-                        <label>
-                            Username or Email
-
-                            <input type="text" name="admin-identifier">
-                        </label>
-                    </p>
-                    <p>
-                        <input type="submit" name="submit" value="Link User">
-                    </p>
-                </fieldset>
-            </form>
-        </div>
         <div class="event-list bordered">
             <h3 class="text-center">Add an attendee</h3>
             <form method="post" action="{{ url_for('event.add_event_attendee', event_id=event_id) }}">
@@ -89,6 +71,61 @@
                     </p>
                 </fieldset>
             </form>
+        </div>
 
+        <div class="instance-form bordered">
+            <h3 class="text-center">Add event admin</h3>
+            <form method="post" action="{{ url_for('event.add_event_manager', event_id=event_id) }}">
+                <fieldset>
+                    <p>
+                        <label>
+                            Username or Email
+
+                            <input type="text" name="admin-identifier">
+                        </label>
+                    </p>
+                    <p>
+                        <input type="submit" name="submit" value="Link User">
+                    </p>
+                </fieldset>
+            </form>
+        </div>
+
+        <div class="event-list bordered">
+            <h3 class="text-center">group invitation links</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <td>
+                            Groupname
+                        </td>
+                        <td>
+                            Link
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for group in groups %}
+                        <tr>
+                            <td>
+                                {{ group.groupName }}
+                            </td>
+                            <td onclick='copyText("{{ group.groupId }}")'>
+                                <p id="{{ group.groupId }}">Copy Link</p> <!--{{ group.groupId }}-->
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function copyText(text) {
+        link = "http://" + location.host + "/groupinvitation/" + text;
+        navigator.clipboard.writeText(link);
+    }
+</script>
 {% endblock %}

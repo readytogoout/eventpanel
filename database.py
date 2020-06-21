@@ -53,14 +53,23 @@ class EventManagerRelation(db.Model):
     event = ForeignKeyField(Event)
 
 
-class EventAttendee(db.Model):
+class Groups(db.Model):
+    id = IntegerField(primary_key=True)
+    name = CharField()
+    group_id = CharField()
     event = ForeignKeyField(Event)
 
 
-__all__ = ('Instance', 'EventManager', 'Event', 'EventManagerRelation', 'EventAttendee', 'Application')
+class EventAttendee(db.Model):
+    name = CharField()
+    event = ForeignKeyField(Event)
+    group = ForeignKeyField(Groups)
+
+
+__all__ = ('Instance', 'EventManager', 'Event', 'EventManagerRelation', 'Groups', 'EventAttendee', 'Application')
 
 # lmao was für ein idiot hat das geschrieben
 # ah, ja genau: ich
 db.database.create_tables([
-    Instance, EventManager, Event, EventManagerRelation, EventAttendee, Application
+    Instance, EventManager, Event, EventManagerRelation, Groups, EventAttendee, Application
 ], safe=True)

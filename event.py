@@ -7,7 +7,7 @@ from rdyapi import RdyApi
 
 
 def get_blueprint():
-    from database import Event, Instance, EventManagerRelation, EventManager
+    from database import Event, Instance, EventManagerRelation, EventManager, EventAttendee, Groups
     blueprint = Blueprint('event', __name__, url_prefix='/event')
 
     @blueprint.route('/<int:event_id>/admin')
@@ -57,6 +57,9 @@ def get_blueprint():
         username = request.form.get('username')
         groupID = request.form.get('group-id')
 
+        if username is None or groupID is None:
+            return redirect(url_for('.admin', event_id=event_id))
+
         instance = list(Instance.select(Instance)
                         .join(Event, on=(Event.instance_id == Instance.name))
                         .where(Event.event_id == event_id)
@@ -73,6 +76,14 @@ def get_blueprint():
         except Exception as e:
             flash("Server error!", 'error')
 
+        try:
+            EventAttendee.create(name=username,
+                                 event_id=event_id,
+                                 group_id=Groups.select(Groups.id)
+                                                        .where(Groups.group_id == groupID))
+        except peewee.IntegrityError:
+            flash("This group does not exist in the Database of the admin page!", 'error')
+
         return redirect(url_for(".admin", event_id=event_id))
 
     @blueprint.route('/<int:event_id>/admin/eventgroup', methods=['POST'])
@@ -83,10 +94,15 @@ def get_blueprint():
                     .where(Event.event_id == event_id)
                     .namedtuples())
 
+        groupname = request.form.get('groupname')
+        groupId = pw_gen(pw_len=128, use_special_chars=False) # actually a group ID xD
+
         try:
             api = RdyApi(instance[0].hostname, instance[0].api_key)
-            api.create_group(group_id=pw_gen(pw_len=128, use_special_chars=False), # actually a group ID xD
-                                   group_name=request.form.get('groupname'))
+            api.create_group(group_id=groupId,
+                             group_name=groupname)
+
+            Groups.create(name=groupname, group_id=groupId, event_id=event_id)
         except requests.exceptions.ConnectionError:
             flash("Server not reachable!", 'error')
         except Exception as e:

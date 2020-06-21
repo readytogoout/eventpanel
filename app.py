@@ -14,6 +14,7 @@ from event import get_blueprint as get_event_blueprint
 from mailing import Mailsender, ApplicationSentMail, NewApplicationMail
 from util import auth_required, templated, register_user, pre_encode_password
 from version import VERSION as EVENTPANEL_VERSION
+from rdyapi import RdyApi
 
 app = Flask(__name__)
 app.config.from_json('data/config.json')
@@ -128,6 +129,12 @@ def apply_redirect():
 @app.route('/login', methods=['GET'])
 def login_form():
     return render_template('login.html')
+
+@app.route('/groupinvitation/<string:groupId>', methods=['GET'])
+def send_group_invitation_form(groupId):
+    return render_template('invitation system/invitation.html',
+                           groupId=groupId
+                           )
 
 
 # endregion a

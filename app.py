@@ -12,7 +12,7 @@ from flask_peewee.db import Database
 from admin import get_blueprint as get_admin_blueprint
 from event import get_blueprint as get_event_blueprint
 from mailing import Mailsender, ApplicationSentMail, NewApplicationMail
-from util import auth_required, templated, register_user, pre_encode_password
+from util import auth_required, templated, register_eventmanager, pre_encode_password
 from version import VERSION as EVENTPANEL_VERSION
 from rdyapi import RdyApi
 
@@ -157,7 +157,7 @@ def clear_db_command():
 @click.argument('password')
 @click.option('--admin', is_flag=True, help='Make them a site admin')
 def add_admin_command(username, email, password, admin):
-    u = register_user(username, email, password, admin)
+    u = register_eventmanager(username, email, password, admin)
     print(f'User {u.username} created.')
 
 

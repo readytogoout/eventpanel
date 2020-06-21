@@ -5,6 +5,7 @@
 @import "table.css";
 @import "instances.css";
 @import "snackbar.css";
+@import "registergroup.css";
 
 body {
     background: var(--rdy-darkblue);

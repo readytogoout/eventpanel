@@ -95,12 +95,15 @@
             <h3 class="text-center">group invitation links</h3>
             <table>
                 <thead>
-                    <tr>
+                    <tr style="text-align: center">
                         <td>
                             Groupname
                         </td>
                         <td>
                             Link
+                        </td>
+                        <td>
+                            same NPCs (TODO)
                         </td>
                     </tr>
                 </thead>
@@ -110,8 +113,11 @@
                             <td>
                                 {{ group.groupName }}
                             </td>
-                            <td onclick='copyText(convertToGroupInvitationLink("{{ group.groupId }}"))'>
+                            <td onclick='copyText(convertToGroupInvitationLink("{{ group.groupId }}"))' style="cursor: pointer;">
                                 <p id="{{ group.groupId }}">Copy Link</p> <!--{{ group.groupId }}-->
+                            </td>
+                            <td style="text-align: center">
+                                <input type="checkbox" onclick="alert('TODO')">
                             </td>
                         </tr>
                     {% endfor %}
@@ -119,16 +125,4 @@
             </table>
         </div>
     </div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-    function convertToGroupInvitationLink(groupId) {
-        //TODO: change to https
-        return "http://" + location.host + "/event/registerattendee?group-id=" + groupId;
-    }
-    function copyText(text) {
-        navigator.clipboard.writeText(text);
-    }
-</script>
 {% endblock %}

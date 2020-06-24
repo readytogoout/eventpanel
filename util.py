@@ -9,7 +9,7 @@ import peewee
 import requests
 from flask import session, url_for, redirect, flash, request, render_template
 
-from mailing import Mailsender, RegistrationMail
+from mailing import Mailsender, AttendeeRegistration
 from rdyapi import RdyApi
 
 
@@ -97,7 +97,8 @@ def register_event_attendee(instance_hostname, api_key, event_id, username, pass
     except:
         flash("Server error!", 'error')
         return
-
+    group: models.Groups = models.Groups.get(group_id=group_id)
+    event: models.Event = models.Event.get(event_id=event_id)
     try:
         models.EventAttendee.create(name=username,
                                     event_id=event_id,
@@ -108,7 +109,7 @@ def register_event_attendee(instance_hostname, api_key, event_id, username, pass
 
     # TODO create registrationmail for attendees
     with Mailsender():
-        RegistrationMail().send(email, username, password)
+        AttendeeRegistration().send(email, username, password, group.name, event.name, event.instance.hostname)
 
 
 def register_event_group(instance_hostname, api_key, event_id, groupname):

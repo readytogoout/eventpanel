@@ -1,0 +1,29 @@
+{% extends "mail/base.html" %}
+{% block title %}
+    Your New Ready To Go Out Account.
+{% endblock %}
+{% block content %}
+    <p>Your Ready To Go Out Account with the following data has just been created.</p>
+    <table>
+        <tr>
+            <th>Username</th>
+            <td>{{ username }}</td>
+        </tr>
+        <tr>
+            <th>Password</th>
+            <td>{{ password }}</td>
+        </tr>
+        <tr>
+            <th>Group</th>
+            <td>{{ group }}</td>
+        </tr>
+        <tr>
+            <th>Event</th>
+            <td>{{ event }}</td>
+        </tr>
+    </table>
+
+    <p>This Account won't work for other events.</p>
+
+    <p>You can log in at https://{{ instance_host }}</p>
+{% endblock %}

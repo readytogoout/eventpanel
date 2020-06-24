@@ -85,6 +85,22 @@ class NewApplicationMail(Mailjob):
         super()._send_message(to_email=to_email, application=application)
 
 
+class AttendeeRegistration(Mailjob):
+    subject = 'New Ready To Go Out Account'
+    templates = [
+        plain_template('mail/new_user_plain.html'),
+        html_template('mail/new_user.html'),
+    ]
+
+    def send(self, to_email: str, username: str, password: str, group: str, event: str, instance_host: str):
+        super()._send_message(to_email=to_email,
+                              username=username,
+                              password=password,
+                              group=group,
+                              event=event,
+                              instance_host=instance_host)
+
+
 class Mailsender:
     def __init__(self):
         if current_app.config['GMAIL'] != 'log':
@@ -99,6 +115,7 @@ class Mailsender:
             self.log = False
         else:
             self.smtp = None
+            self.from_email = 'noreply@example.com'
             self.log = True
 
     def send_mime(self, to_email: str, mime: MIMEBase):

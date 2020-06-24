@@ -1,4 +1,5 @@
 import json
+from random import random
 
 import peewee
 import requests
@@ -24,7 +25,7 @@ def get_blueprint():
             i: Instance = Instance.get(Instance.name == e.instance)
 
             api = RdyApi(i.hostname, i.api_key)
-            groups = api.get_groups()
+            groups = list(Groups.select().namedtuples())
 
         except json.decoder.JSONDecodeError:
             abort(500, 'API Key invalid!')
@@ -82,7 +83,8 @@ def get_blueprint():
                                 event_id,
                                 username,
                                 pw_gen(8),
-                                groupID)
+                                groupID,
+                                sendmail=False)
 
         return redirect(url_for(".admin", event_id=event_id))
 
@@ -96,13 +98,43 @@ def get_blueprint():
 
         groupname = request.form.get('groupname')
 
-        register_event_group(instance[0].hostname, instance[0].api_key, event_id, groupname)
+        register_event_group(instance[0].hostname, instance[0].api_key, event_id, groupname, False)
 
         return redirect(url_for(".admin", event_id=event_id))
 
+    @auth_required(has_access_to_event('event_id'))
+    @blueprint.route('/<int:event_id>/admin/groupsyncstate', methods=['POST'])
+    def groupsyncstate(event_id):
+        req = json.loads(request.data)
+        group_id = req['group_id']
+
+        try:
+            state = not req['state'] == "True"
+
+        except:
+            return redirect(url_for(".admin", event_id=event_id))
+
+        hostname, api_key = list(Instance.select(Instance.hostname, Instance.api_key)
+                            .join(Event, on=Event.instance_id == Instance.name)
+                            .join(Groups, on=Groups.event_id == Event.event_id)
+                            .where(Event.event_id == event_id)
+                            .namedtuples())[0]
+
+        with RdyApi(hostname, api_key) as api:
+            api.set_sync_npcs(group_id, state)
+
+        print(state)
+        print(group_id)
+
+        Groups.update(has_synced_npcs=state).where(group_id == group_id).execute()
+
+        return redirect(url_for(".admin", event_id=event_id))
+
+
+
     @blueprint.route('/eventinvitation/<string:event_id>', methods=['GET'])
     def eventinvitation(event_id):
-        # create group
+        # TODO create group
         return None
 
     @blueprint.route('/registerattendee/<string:groupId>')

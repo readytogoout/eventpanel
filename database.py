@@ -58,6 +58,7 @@ class Groups(db.Model):
     name = CharField()
     group_id = CharField()
     event = ForeignKeyField(Event)
+    has_synced_npcs = BooleanField()
 
 
 class EventAttendee(db.Model):

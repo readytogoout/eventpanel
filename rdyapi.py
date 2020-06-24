@@ -36,6 +36,12 @@ class RdyApi:
         res.raise_for_status()
         return res.json()
 
+    # if enabled all users of a group will spawn the npcs on the same location
+    def set_sync_npcs(self, group_id: str, is_sync_npc: bool):
+        res = self.session.patch(f'https://{self.hostname}/admin/groups', params=dict(groupId=group_id, isSyncNpcs=is_sync_npc))
+        res.raise_for_status()
+        return res.text
+
     def __enter__(self):
         return self
 

@@ -83,7 +83,7 @@ def register_eventmanager(username: str, email: str, plain_password: str, site_a
                                       site_admin=site_admin)
 
 
-def register_event_attendee(instance_hostname, api_key, event_id, username, password, group_id, email=""):
+def register_event_attendee(instance_hostname, api_key, event_id, username, password, group_id, email="", sendmail=True):
     import database as models
     try:
         api = RdyApi(instance_hostname, api_key)
@@ -108,11 +108,12 @@ def register_event_attendee(instance_hostname, api_key, event_id, username, pass
         flash("This group does not exist in the Database of the admin page!", 'error')
 
     # TODO create registrationmail for attendees
-    with Mailsender():
-        AttendeeRegistration().send(email, username, password, group.name, event.name, event.instance.hostname)
+    if sendmail:
+        with Mailsender():
+            AttendeeRegistration().send(email, username, password, group.name, event.name, event.instance.hostname)
 
 
-def register_event_group(instance_hostname, api_key, event_id, groupname):
+def register_event_group(instance_hostname, api_key, event_id, groupname, hasSyncedNPCs):
     import database as models
     group_id = pw_gen(pw_len=32, use_special_chars=False)
 
@@ -124,4 +125,4 @@ def register_event_group(instance_hostname, api_key, event_id, groupname):
         flash("Server not reachable!", 'error')
         return
 
-    models.Groups.create(name=groupname, group_id=group_id, event_id=event_id)
+    models.Groups.create(name=groupname, group_id=group_id, event_id=event_id, has_synced_npcs=hasSyncedNPCs)

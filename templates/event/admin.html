@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block navbar %}
-<!--<li><a href="{{ url_for('login_form') }}">Login</a></li>-->
+    <!--<li><a href="{{ url_for('login_form') }}">Login</a></li>-->
 {% endblock %}
 
 {% block content %}
@@ -41,11 +41,11 @@
                         <label>
                             Group
                             <select name="group-id">
-                            {% for group in groups %}
-                                <option value="{{ group.groupId }}">
-                                    {{ group.groupName }}
-                                </option>
-                            {% endfor %}
+                                {% for group in groups %}
+                                    <option value="{{ group.group_id }}">
+                                        {{ group.name }}
+                                    </option>
+                                {% endfor %}
                             </select>
                         </label>
                     </p>
@@ -93,8 +93,8 @@
 
         <div class="event-list bordered">
             <h3 class="text-center">group invitation links</h3>
-            <table>
-                <thead>
+                <table>
+                    <thead>
                     <tr style="text-align: center">
                         <td>
                             Groupname
@@ -106,23 +106,35 @@
                             same NPCs (TODO)
                         </td>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
+
                     {% for group in groups %}
                         <tr>
                             <td>
-                                {{ group.groupName }}
+                                {{ group.name }}
                             </td>
-                            <td onclick='copyText(convertToGroupInvitationLink("{{ group.groupId }}"))' style="cursor: pointer;">
-                                <p id="{{ group.groupId }}">Copy Link</p> <!--{{ group.groupId }}-->
+                            <td onclick='copyText(convertToGroupInvitationLink("{{ group.group_id }}"))'
+                                style="cursor: pointer;">
+                                <p id="{{ group.group_id }}">Copy Link</p>
                             </td>
-                            <td style="text-align: center">
-                                <input type="checkbox" onclick="alert('TODO')">
+                            <td style="text-align: center; cursor: pointer;"
+                                data-hasSyncedNPCs="{{ group.has_synced_npcs }}"
+                                onclick="sendGroupSyncState({{ event_id }}, '{{ group.group_id }}', this.attributes['data-hasSyncedNPCs'].value)">
+                                <p>
+                                    {% if group.has_synced_npcs %}
+                                        Disable
+                                    {% else %}
+                                        Enable
+                                    {% endif %}
+                                </p>
+                                <!--onclick='(event) => sendGroupSyncState({{ event_id }}, "{{ group.group_id }}", event)'-->
                             </td>
                         </tr>
                     {% endfor %}
-                </tbody>
-            </table>
+                    </tbody>
+
+                </table>
         </div>
     </div>
 {% endblock %}

@@ -46,7 +46,7 @@ def index():
                           .where(models.EventManagerRelation.manager == username)
                           .namedtuples()
                           )
-        print(event_list)
+        # print(event_list)
         return dict(events=event_list)
     else:
         return dict()

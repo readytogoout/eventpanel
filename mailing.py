@@ -99,6 +99,7 @@ class Mailsender:
             self.log = False
         else:
             self.smtp = None
+            self.from_email = 'noreply@example.com'
             self.log = True
 
     def send_mime(self, to_email: str, mime: MIMEBase):

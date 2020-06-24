@@ -149,7 +149,7 @@ def get_blueprint():
             .where(Groups.group_id == groupId)
             .namedtuples())
 
-        register_event_attendee(queryresp[0].hostname, queryresp[0].api_key, queryresp[0].event_id, username, pw_gen(8), groupId, email=email, sendmail=True)
+        register_event_attendee(queryresp[0].hostname, queryresp[0].api_key, queryresp[0].event_id, username, pw_gen(8), groupId, email=email)
 
         return redirect(url_for('.registerattendee', groupId=groupId, registersuccess=True, username=username))
 

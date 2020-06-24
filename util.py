@@ -1,14 +1,12 @@
 import base64
 import functools
 import hashlib
-import json
 import random
 import string
 
 import bcrypt
 import peewee
 import requests
-
 from flask import session, url_for, redirect, flash, request, render_template
 
 from mailing import Mailsender, RegistrationMail
@@ -85,7 +83,7 @@ def register_eventmanager(username: str, email: str, plain_password: str, site_a
                                       site_admin=site_admin)
 
 
-def register_event_attendee(instance_hostname, api_key, event_id, username, password, group_id, email="", sendmail=False):
+def register_event_attendee(instance_hostname, api_key, event_id, username, password, group_id, email=""):
     import database as models
     try:
         api = RdyApi(instance_hostname, api_key)
@@ -104,14 +102,13 @@ def register_event_attendee(instance_hostname, api_key, event_id, username, pass
         models.EventAttendee.create(name=username,
                                     event_id=event_id,
                                     group_id=models.Groups.select(models.Groups.id)
-                                                                  .where(models.Groups.group_id == group_id))
+                                    .where(models.Groups.group_id == group_id))
     except peewee.IntegrityError:
         flash("This group does not exist in the Database of the admin page!", 'error')
 
     # TODO create registrationmail for attendees
-    if sendmail:
-        with Mailsender() as sender:
-            RegistrationMail(sender).send(email, username, password)
+    with Mailsender():
+        RegistrationMail().send(email, username, password)
 
 
 def register_event_group(instance_hostname, api_key, event_id, groupname):

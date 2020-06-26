@@ -25,7 +25,7 @@ def get_blueprint():
             i: Instance = Instance.get(Instance.name == e.instance)
 
             api = RdyApi(i.hostname, i.api_key)
-            groups = list(Groups.select().namedtuples())
+            groups = list(Groups.select().where(Groups.event_id == event_id).namedtuples())
 
         except json.decoder.JSONDecodeError:
             abort(500, 'API Key invalid!')

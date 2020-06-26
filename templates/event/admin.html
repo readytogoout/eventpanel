@@ -36,7 +36,7 @@
                         <label>
                             Username
 
-                            <input type="text" name="username">
+                            <input required="true" type="text" name="username">
                         </label>
                         <label>
                             Group
@@ -47,6 +47,10 @@
                                     </option>
                                 {% endfor %}
                             </select>
+                        </label>
+                        <label>
+                            Email
+                            <input required="true" type="email" name="email"> <!--placeholder="otherwise admin emails"-->
                         </label>
                     </p>
                     <p>

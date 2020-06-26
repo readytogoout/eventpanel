@@ -69,8 +69,14 @@ def get_blueprint():
     def add_event_attendee(event_id):
         username = request.form.get('username')
         groupID = request.form.get('group-id')
+        email = request.form.get('email')
 
-        if username is None or groupID is None:
+        if username is None:
+            flash("please enter a username")
+            return redirect(url_for('.admin', event_id=event_id))
+
+        if groupID is None:
+            flash("please choose a Group")
             return redirect(url_for('.admin', event_id=event_id))
 
         instance = list(Instance.select(Instance)
@@ -78,13 +84,22 @@ def get_blueprint():
                         .where(Event.event_id == event_id)
                         .namedtuples())
 
+        if email is None:
+            flash("please enter a email for sending user credentials")
+            return redirect(url_for('.admin', event_id=event_id))
+#            emails = list(Event.select()
+#                               .join(EventManagerRelation, on=Event.event_id == EventManagerRelation.event_id)
+#                               .join(EventManager, on=EventManager.username == EventManagerRelation.manager_id)
+#                               .namedtuples())
+
         register_event_attendee(instance[0].hostname,
                                 instance[0].api_key,
                                 event_id,
                                 username,
                                 pw_gen(8),
                                 groupID,
-                                sendmail=False)
+                                sendmail=True,
+                                email=email)
 
         return redirect(url_for(".admin", event_id=event_id))
 

@@ -69,12 +69,12 @@ def get_blueprint() -> Blueprint:
             flash('Missing Name')
             return redirect(url_for('.index'))
 
-        api_key = request.form.get('api_key')
+        api_key = request.form.get('api_key').rstrip().lstrip()
         if not api_key:
             flash("No API KEY")
             return redirect(url_for('.index'))
 
-        hostname = request.form.get('hostname')
+        hostname = request.form.get('hostname').rstrip().lstrip()
         if not hostname:
             flash('Missing hostname')
             return redirect(url_for('.index'))

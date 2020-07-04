@@ -11,7 +11,11 @@
             </tr>
             <tr>
                 <th>Hostname</th>
-                <td><a href="http://{{ hostname }}"><pre>{{ hostname }}</pre></a></td>
+                <td><a href="https://{{ hostname }}"><pre>{{ hostname }}</pre></a></td>
+            </tr>
+            <tr>
+                <th>API Key</th>
+                <td class="bordered"><span class="spoiler">{{ api_key }}</span></td>
             </tr>
         </table>
     </div>
@@ -30,7 +34,7 @@
             <tbody>
             {% for event in events %}
                 <tr>
-                    <td>{{ event.event_id }}</td>
+                    <td><a href="{{ url_for('event.admin', event_id=event.event_id) }}">{{ event.event_id }}</a></td>
                     <td>{{ event.name }}</td>
                     <td>
                         <ul class="manager-list">

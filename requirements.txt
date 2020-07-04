@@ -3,3 +3,4 @@ flask-peewee
 bcrypt
 peewee
 click
+requests

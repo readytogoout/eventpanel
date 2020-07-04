@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}
+    Invitation for {{ group.name }}
+{% endblock %}
+{% block content %}
+    {% if registersuccess %}
+        <div class="successmessage">
+            You've successfully registered as {{ username }} in your group {{ group.name }} on 
+            <a href="https://{{ instance.hostname }}">{{ instance.hostname }}</a>
+        </div>
+    {% else %}
+        <div id="regattendeeheadline">
+            <h2>Register as attendee for group {{ group.name }}</h2>
+            <h5>Your email will only be used to send you your account credentials</h5>
+        </div>
+        <div class="register-attendee bordered">
+            <form method="POST">
+                <p>Username:</p>
+                <input type="text" name="username">
+
+                <br>
+                <p>Email:</p>
+                <input type="email" name="email">
+
+                <input type="submit" value="Register">
+            </form>
+
+        </div>
+    {% endif %}
+{% endblock %}

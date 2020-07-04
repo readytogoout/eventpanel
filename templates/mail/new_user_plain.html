@@ -1,0 +1,15 @@
+{% extends "mail/base_plain.html" %}
+{% block content %}
+Your New Ready To Go Out Account.
+
+Your Ready To Go Out Account with the following data has just been created.
+
+Username: {{ username }}
+Password: {{ password }}
+Group: {{ group }}
+Event: {{ event }}
+
+This Account won't work for other events.
+
+You can log in at https://{{ instance_host }}
+{% endblock %}

@@ -18,14 +18,24 @@ class EnumField(CharField):
 
 class Instance(db.Model):
     name = CharField(primary_key=True)
+    api_key = CharField()
     hostname = CharField()
 
 
 class Event(db.Model):
     name = CharField()
     event_id = IntegerField(primary_key=True)
-    registration_link = CharField(unique=True, null=True)
+    registration_id = CharField(unique=True, null=True)
     instance = ForeignKeyField(Instance, backref='events')
+
+
+class Application(db.Model):
+    application_id = IntegerField(primary_key=True)
+    first_name = CharField()
+    last_name = CharField()
+    email = CharField()
+    count = CharField()
+    message = CharField(max_length=10000)
 
 
 class EventManager(db.Model):
@@ -36,18 +46,31 @@ class EventManager(db.Model):
 
 
 class EventManagerRelation(db.Model):
+    class Meta:
+        primary_key = CompositeKey('manager', 'event')
+
     manager = ForeignKeyField(EventManager)
     event = ForeignKeyField(Event)
 
 
-class EventAttendee(db.Model):
+class Groups(db.Model):
+    id = IntegerField(primary_key=True)
+    name = CharField()
+    group_id = CharField()
     event = ForeignKeyField(Event)
+    has_synced_npcs = BooleanField()
 
 
-__all__ = ('Instance', 'EventManager', 'Event', 'EventManagerRelation', 'EventAttendee')
+class EventAttendee(db.Model):
+    name = CharField()
+    event = ForeignKeyField(Event)
+    group = ForeignKeyField(Groups)
+
+
+__all__ = ('Instance', 'EventManager', 'Event', 'EventManagerRelation', 'Groups', 'EventAttendee', 'Application')
 
 # lmao was für ein idiot hat das geschrieben
 # ah, ja genau: ich
 db.database.create_tables([
-    Instance, EventManager, Event, EventManagerRelation, EventAttendee
+    Instance, EventManager, Event, EventManagerRelation, Groups, EventAttendee, Application
 ], safe=True)

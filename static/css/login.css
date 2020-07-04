@@ -1,7 +1,7 @@
 .centered-block {
     display: block;
-    width: 50%;
-    min-width: 600px;
+    width: 30%;
+    min-width: 300px;
     margin: 1em auto;
 }
 
@@ -18,13 +18,15 @@ label {
     display: block;
 }
 
-input[type=text], input[type=password] {
+input[type=text], input[type=password], input[type=email] {
     display: block;
     border: 0;
     border-bottom: 1px solid var(--rdy-green);
     font-size: inherit;
     background: inherit;
     color: var(--rdy-white);
+    margin-top: 0.2em;
+    width: 100%;
 }
 
 input[type=submit], input[type=reset], button {
@@ -39,6 +41,6 @@ input[type=submit], input[type=reset], button {
 
 @media screen and (max-width: 600px) {
     .centered-block {
-        min-width: 100vw;
+        min-width: 90vw;
     }
 }

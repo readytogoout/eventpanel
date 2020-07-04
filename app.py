@@ -1,15 +1,20 @@
-import base64
-import hashlib
+import random
+from sqlite3 import sqlite_version as SQLITE_VERSION
+from sys import version as PYTHON_VERSION
 
 import bcrypt
 import click
 import peewee
-from flask import Flask, render_template, redirect, request, flash, url_for, session
+from flask import Flask, render_template, redirect, request, flash, url_for, session, abort
+from flask import __version__ as FLASK_VERSION
 from flask_peewee.db import Database
 
 from admin import get_blueprint as get_admin_blueprint
 from event import get_blueprint as get_event_blueprint
-from util import auth_required, templated
+from mailing import Mailsender, ApplicationSentMail, NewApplicationMail
+from util import auth_required, templated, register_eventmanager, pre_encode_password
+from version import VERSION as EVENTPANEL_VERSION
+from rdyapi import RdyApi
 
 app = Flask(__name__)
 app.config.from_json('data/config.json')
@@ -23,9 +28,10 @@ import database as models
 @app.context_processor
 def global_jinja_injection():
     return dict(
-        logged_in='user' in session,
+        logged_in='username' in session,
         is_admin=session.get('admin', False),
         username=session.get('user'),
+        wins_legit_iphone=random.randint(0, 200) == 42,
     )
 
 
@@ -33,7 +39,31 @@ def global_jinja_injection():
 @app.route('/', methods=['GET', 'POST', 'PUT'])
 @templated('index.html')
 def index():
-    return dict()
+    if 'username' in session:
+        username = session['username']
+        event_list = list(models.EventManagerRelation.select(models.Event.name, models.Event.event_id)
+                          .join(models.Event, on=models.Event.event_id == models.EventManagerRelation.event_id)
+                          .where(models.EventManagerRelation.manager == username)
+                          .namedtuples()
+                          )
+        # print(event_list)
+        return dict(events=event_list)
+    else:
+        return dict()
+
+
+@app.route('/info')
+@templated('info.html')
+def info():
+    return dict(
+        versions=dict(
+            eventpanel=EVENTPANEL_VERSION,
+            python=PYTHON_VERSION,
+            flask=FLASK_VERSION,
+            sqlite_driver=SQLITE_VERSION,
+            sqlite='.'.join(map(str, models.db.database.server_version)),
+        )
+    )
 
 
 @app.route('/<int:u>')
@@ -44,20 +74,6 @@ def goodbye(u: int):
     return render_template('number.html', number=u)
 
 
-def pre_encode_password(password: str):
-    """
-    Still needs encoding using :meth:`bcrypt.hashpw`
-    """
-    return base64.b64encode(hashlib.sha256(password.encode(encoding='utf-8')).digest())
-
-
-def register_user(username: str, email: str, plain_password: str, site_admin: bool = False):
-    return models.EventManager.create(username=username, email=email,
-                                      password=bcrypt.hashpw(pre_encode_password(plain_password), bcrypt.gensalt()),
-                                      site_admin=site_admin)
-
-
-# TODO: sessioncookie
 @app.route('/login', methods=['POST'])
 def login():
     username = request.form.get('username')
@@ -82,14 +98,49 @@ def login():
         return redirect(url_for('login_form'))
 
 
+@app.route('/apply', methods=['POST'])
+def apply():
+    first_name = request.form.get('first_name')
+    last_name = request.form.get('last_name')
+    email = request.form.get('email')
+    persons = request.form.get('persons')
+    message = request.form.get('message', '')
+    if not all([first_name, last_name, email, persons]):
+        return redirect('https://readytogoout.games/invalidapplication/')
+
+    application = models.Application.create(
+        first_name=first_name,
+        last_name=last_name,
+        email=email,
+        count=persons,
+        message=message,
+    )
+    with Mailsender():
+        ApplicationSentMail().send(email)
+        NewApplicationMail().send('kontakt@readytogoout.games', application)
+    return redirect('https://readytogoout.games/mailsuccess/')
+
+
+@app.route('/apply', methods=['GET'])
+def apply_redirect():
+    return redirect('https://readytogoout.games/')
+
+
 @app.route('/login', methods=['GET'])
 def login_form():
     return render_template('login.html')
 
-
 # endregion a
 app.register_blueprint(get_event_blueprint())
 app.register_blueprint(get_admin_blueprint())
+
+
+@app.route('/logout', methods=['GET'])
+@auth_required()
+@templated('logout.html')
+def logout():
+    session.clear()
+    return dict()
 
 
 @app.cli.command('clear-db', help='Obliterate the database file')
@@ -106,7 +157,7 @@ def clear_db_command():
 @click.argument('password')
 @click.option('--admin', is_flag=True, help='Make them a site admin')
 def add_admin_command(username, email, password, admin):
-    u = register_user(username, email, password, admin)
+    u = register_eventmanager(username, email, password, admin)
     print(f'User {u.username} created.')
 
 

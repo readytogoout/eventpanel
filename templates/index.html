@@ -4,4 +4,25 @@
 {% endblock %}
 {% block content %}
     Hello {{ session.get('username', 'World') }}
+    <div class="multipanel">
+        {% if events %}
+        <div class="event-list bordered">
+            Your events
+            <table>
+                <thead>
+                    <tr>
+                        <td>
+                            Name
+                        </td>
+                    </tr>
+                </thead>
+                {% for event in events %}
+                    <tr>
+                        <td><a href="{{ url_for('event.admin', event_id=event.event_id) }}">{{ event.name }}</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% endif %}
+    </div>
 {% endblock %}

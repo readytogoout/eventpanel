@@ -1,0 +1,13 @@
+{% extends "mail/base_plain.html" %}
+{% block content %}
+A new application was sent by {{ application.first_name | safe }} {{ application.last_name | safe }}.
+
+Email: {{ application.email | safe }}
+Count: {{ application.count | safe }}
+Their message:
+
+{{ application.message | safe }}
+
+
+View their application here: {{ url_for('admin.application', application_id=application.application_id) }}
+{% endblock %}

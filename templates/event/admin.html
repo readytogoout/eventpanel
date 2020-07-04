@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 {% block title %}
-    Event {{ name }} - Admin
+    Event Adminpanel - {{ name }}
 {% endblock %}
+
+{% block navbar %}
+    <!--<li><a href="{{ url_for('login_form') }}">Login</a></li>-->
+{% endblock %}
+
 {% block content %}
     <div class="infobar">
         <table>
@@ -11,9 +16,129 @@
             </tr>
             <tr>
                 <th>Hosted On</th>
-                <td><a href="https://{{ instance_host }}">{{ instance }}</a></td>
+                <td>
+                    <a href="https://{{ instance_host }}">{{ instance }}</a>
+                    {% if is_admin %}
+                        <a href="{{ url_for('admin.instance_details', instance_id=instance) }}">(Admin Panel)</a>
+                    {% endif %}
+                </td>
             </tr>
         </table>
     </div>
-    <!-- TODO show managers and settings. Add manager option? -->
+
+
+    <div class="multipanel">
+        <div class="event-list bordered">
+            <h3 class="text-center">Add an attendee</h3>
+            <form method="post" action="{{ url_for('event.add_event_attendee', event_id=event_id) }}">
+                <fieldset>
+                    <p>
+                        <label>
+                            Username
+
+                            <input required="true" type="text" name="username">
+                        </label>
+                        <label>
+                            Group
+                            <select name="group-id">
+                                {% for group in groups %}
+                                    <option value="{{ group.group_id }}">
+                                        {{ group.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </label>
+                        <label>
+                            Email
+                            <input required="true" type="email" name="email"> <!--placeholder="otherwise admin emails"-->
+                        </label>
+                    </p>
+                    <p>
+                        <input type="submit" name="submit" value="Create">
+                    </p>
+                </fieldset>
+            </form>
+        </div>
+        <div class="event-list bordered">
+            <h3 class="text-center">Create a group</h3>
+            <form method="post" action="{{ url_for('event.add_event_group', event_id=event_id) }}">
+                <fieldset>
+                    <p>
+                        <label>
+                            Groupname
+
+                            <input type="text" name="groupname">
+                        </label>
+                    </p>
+                    <p>
+                        <input type="submit" name="submit" value="Create">
+                    </p>
+                </fieldset>
+            </form>
+        </div>
+
+        <div class="instance-form bordered">
+            <h3 class="text-center">Add event admin</h3>
+            <form method="post" action="{{ url_for('event.add_event_manager', event_id=event_id) }}">
+                <fieldset>
+                    <p>
+                        <label>
+                            Username or Email
+
+                            <input type="text" name="admin-identifier">
+                        </label>
+                    </p>
+                    <p>
+                        <input type="submit" name="submit" value="Link User">
+                    </p>
+                </fieldset>
+            </form>
+        </div>
+
+        <div class="event-list bordered">
+            <h3 class="text-center">group invitation links</h3>
+                <table>
+                    <thead>
+                    <tr style="text-align: center">
+                        <td>
+                            Groupname
+                        </td>
+                        <td>
+                            Link
+                        </td>
+                        <td>
+                            same NPCs (TODO)
+                        </td>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for group in groups %}
+                        <tr>
+                            <td>
+                                {{ group.name }}
+                            </td>
+                            <td onclick='copyText(convertToGroupInvitationLink("{{ group.group_id }}"))'
+                                style="cursor: pointer;">
+                                <p id="{{ group.group_id }}">Copy Link</p>
+                            </td>
+                            <td style="text-align: center; cursor: pointer;"
+                                data-hasSyncedNPCs="{{ group.has_synced_npcs }}"
+                                onclick="sendGroupSyncState({{ event_id }}, '{{ group.group_id }}', this.attributes['data-hasSyncedNPCs'].value)">
+                                <p>
+                                    {% if group.has_synced_npcs %}
+                                        Disable
+                                    {% else %}
+                                        Enable
+                                    {% endif %}
+                                </p>
+                                <!--onclick='(event) => sendGroupSyncState({{ event_id }}, "{{ group.group_id }}", event)'-->
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+        </div>
+    </div>
 {% endblock %}

@@ -1,15 +1,15 @@
 from collections import defaultdict
 
+import peewee
 from flask import Blueprint, abort, request, flash, redirect, url_for
 from peewee import JOIN
 
-from util import auth_required, templated
-
-
+from mailing import Mailsender, RegistrationMail
+from util import auth_required, templated, register_eventmanager
 
 
 def get_blueprint() -> Blueprint:
-    from database import Instance, EventManagerRelation, Event
+    from database import Instance, EventManagerRelation, Event, EventManager
     blueprint = Blueprint('admin', __name__, url_prefix='/admin')
 
     @blueprint.route('/')
@@ -17,7 +17,9 @@ def get_blueprint() -> Blueprint:
     @templated('admin.html')
     def index():
         instance_list = list(Instance.select(Instance.hostname, Instance.name).namedtuples())
-        return dict(instances=instance_list)
+        manager_list = list(EventManager.select(
+            EventManager.username, EventManager.email, EventManager.site_admin).namedtuples())
+        return dict(instances=instance_list, managers=manager_list)
 
     @blueprint.route('/event/', methods=['POST'])
     @auth_required(requires_site_admin=True)
@@ -27,14 +29,37 @@ def get_blueprint() -> Blueprint:
         e = Event.create(name=event_name, instance=instance_id)
         return redirect(url_for('event.admin', event_id=e.event_id))
 
+    @blueprint.route('/application/<application_id>')
+    @auth_required(requires_site_admin=True)
+    def application(application_id: str):
+        return str(application_id)
+
     @blueprint.route('/event-manager/', methods=['POST'])
     @auth_required(requires_site_admin=True)
-    def register_event_manager():
+    def create_user():
         username = request.form.get('username')
-        password = "random"
         email = request.form.get('email')
+        is_site_admin = request.form.get('is-admin')
+        if is_site_admin == 'on':
+            is_site_admin = True
+        else:
+            is_site_admin = False
 
-        return "todo"
+        password = "passwort"  # TODO pw_gen(8)
+
+        if username is None or email is None or is_site_admin is None:
+            flash('Please check you\'re input')
+            return redirect(url_for('admin.index'))
+
+        try:
+            register_eventmanager(username, email, password, site_admin=is_site_admin)
+            flash('Success')
+        except peewee.IntegrityError:
+            flash('Username is already taken!')
+        with Mailsender() as sender:
+            RegistrationMail(sender).send(email, username, password)
+
+        return redirect(url_for('admin.index'))
 
     @blueprint.route('/instance/', methods=['POST'])
     @auth_required(requires_site_admin=True)
@@ -42,14 +67,20 @@ def get_blueprint() -> Blueprint:
         instance_name = request.form.get('name')
         if not instance_name:
             flash('Missing Name')
-            return redirect(url_for('.index'))  # todo: redirect to creation form
+            return redirect(url_for('.index'))
 
-        hostname = request.form.get('hostname')
+        api_key = request.form.get('api_key').rstrip().lstrip()
+        if not api_key:
+            flash("No API KEY")
+            return redirect(url_for('.index'))
+
+        hostname = request.form.get('hostname').rstrip().lstrip()
         if not hostname:
             flash('Missing hostname')
-            return redirect(url_for('.index'))  # todo: redirect to creation form
+            return redirect(url_for('.index'))
 
-        i, created = Instance.get_or_create(name=instance_name, hostname=hostname)
+        i, created = Instance.get_or_create(name=instance_name, hostname=hostname,
+                                            api_key=api_key)
         if not created:
             flash('This instance name is already in use.')
             return redirect(url_for('.index'))
@@ -75,7 +106,8 @@ def get_blueprint() -> Blueprint:
             events=event_list,
             managers=managers,
             name=instance_id,
-            hostname=i.hostname
+            hostname=i.hostname,
+            api_key=i.api_key
         )
 
     return blueprint

@@ -14,15 +14,43 @@
             <tbody>
             {% for instance in instances %}
                 <tr>
-                    <td>{{ instance.name }}</td>
+                    <td>
+                        <a href="{{ url_for('admin.instance_details', instance_id=instance.name) }}">{{ instance.name }}</a>
+                    </td>
                     <td>{{ instance.hostname }}</td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
-        <div>
-            Placeholder to test multipanel
-        </div>
+        <!-- todo: Globale event liste -->
+        <table class="bordered instance-list"><!-- Reusing classes, aren't we? -->
+            <thead>
+            <tr>
+                <th colspan="3">
+                    Event manager
+                </th>
+            </tr>
+            <tr>
+                <td>Username</td>
+                <td>Email</td>
+                <td>Is Site Admin</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for manager in managers %}
+                <tr>
+                    <td>{{ manager.username }}</td>
+                    <td>{{ manager.email }}</td>
+                    <td>{{ manager.site_admin }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">No managers yet</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
         <div class="instance-form bordered">
             <h3 class="text-center">Register Instance</h3>
             <form method="post" action="{{ url_for('admin.register_instance') }}">
@@ -37,6 +65,12 @@
                         <label>
                             Instance Hostname
                             <input type="text" name="hostname">
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            API Key
+                            <input type="text" name="api_key">
                         </label>
                     </p>
                     <p>
@@ -61,7 +95,9 @@
                             <select name="instance">
                                 {% for instance in instances %}
                                     <option value="{{ instance.name }}">
-                                        {{ instance.name }}(<pre>{{ instance.hostname }}</pre>)
+                                        {{ instance.name }}(
+                                        <pre>{{ instance.hostname }}</pre>
+                                        )
                                     </option>
                                 {% endfor %}
 
@@ -69,11 +105,38 @@
                         </label>
                     </p>
                     <p>
-                        <input type="submit" name="submit" value="Register Instance">
+                        <input type="submit" name="submit" value="Register Event">
                     </p>
                 </fieldset>
             </form>
-
+        </div>
+        <div class="instance-form bordered">
+            <h3 class="text-center">Register User</h3>
+            <form method="post" action="{{ url_for('admin.create_user') }}">
+                <fieldset>
+                    <p>
+                        <label>
+                            Username
+                            <input type="text" name="username">
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            Email
+                            <input type="email" name="email">
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            Is Admin
+                            <input type="checkbox", name="is-admin">
+                        </label>
+                    </p>
+                    <p>
+                        <input type="submit" name="submit" value="Register User">
+                    </p>
+                </fieldset>
+            </form>
         </div>
     </div>
 {% endblock %}

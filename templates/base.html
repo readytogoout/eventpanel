@@ -22,25 +22,34 @@
 <body>
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-        <ul class=flashes>
-            {% for category, message  in messages %}
-                <li class="flash flash-{{ category }}">{{ message }}</li>
+        <div class=flashes>
+            {% for category, message in messages %}
+                <span class="flash flash-{{ category }}">{{ message }}</span>
             {% endfor %}
-        </ul>
+        </div>
     {% endif %}
 {% endwith %}
 <header>
     <div class="navigation-toggle" id="navigation-toggle"><i class="gg-menu"></i></div>
     <nav class="navigation-container navigation-collapsed" id="navigation-container">
-        <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='branding/png/logo_schrift.png') }}" alt="logo" class="logo"></a>
+        <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='branding/png/logo_schrift.png') }}"
+                                              alt="logo" class="logo"></a>
         <ul class="navigation-list" id="navigation-list">
             <li><a href="{{ url_for('index') }}">Home</a></li>
-            {% if logged_in %}
-            {% endif %}
             {% if is_admin %}
-            <li><a href="{{ url_for('admin.index') }}">Site-Admin</a></li>
+                <li><a href="{{ url_for('admin.index') }}">Site-Admin</a></li>
             {% endif %}
+
+            {% if logged_in %}
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% else %}
+                <li><a href="{{ url_for('login_form') }}">Login</a></li>
+            {% endif %}
+            {% block navbar %}
+                <!--Navbar elements-->
+            {% endblock %}
             <li><a href="mailto:kontakt@readytogoout.games">Contact</a></li>
+            <li><a href="{{ url_for('info') }}">Info</a></li>
         </ul>
     </nav>
 </header>
@@ -52,5 +61,6 @@
 {% block scripts %}
 {% endblock %}
 <script src="{{ url_for('static', filename='js/menu.js') }}"></script>
+<script src="{{ url_for('static', filename='js/util.js') }}"></script>
 </body>
 </html>

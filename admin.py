@@ -1,11 +1,12 @@
 from collections import defaultdict
 
+import bcrypt
 import peewee
 from flask import Blueprint, abort, request, flash, redirect, url_for
 from peewee import JOIN
 
 from mailing import Mailsender, RegistrationMail
-from util import auth_required, templated, register_eventmanager
+from util import auth_required, templated, register_eventmanager, pre_encode_password, pw_gen
 
 
 def get_blueprint() -> Blueprint:
@@ -45,7 +46,7 @@ def get_blueprint() -> Blueprint:
         else:
             is_site_admin = False
 
-        password = "passwort"  # TODO pw_gen(8)
+        password = pw_gen(10)
 
         if username is None or email is None or is_site_admin is None:
             flash('Please check you\'re input')
@@ -59,6 +60,15 @@ def get_blueprint() -> Blueprint:
         with Mailsender() as sender:
             RegistrationMail(sender).send(email, username, password)
 
+        return redirect(url_for('admin.index'))
+
+    @blueprint.route('/event-manager/password', methods=['POST'])
+    @auth_required(requires_site_admin=True)
+    def change_password():
+        password = request.form.get('password')
+        manager = request.form.get('manager')  # todo errors
+        EventManager.update({EventManager.password: bcrypt.hashpw(
+            pre_encode_password(password), bcrypt.gensalt())}).where(EventManager.username == manager).execute()
         return redirect(url_for('admin.index'))
 
     @blueprint.route('/instance/', methods=['POST'])

@@ -129,11 +129,37 @@
                     <p>
                         <label>
                             Is Admin
-                            <input type="checkbox", name="is-admin">
+                            <input type="checkbox" , name="is-admin">
                         </label>
                     </p>
                     <p>
                         <input type="submit" name="submit" value="Register User">
+                    </p>
+                </fieldset>
+            </form>
+        </div>
+        <div class="instance-form bordered">
+            <h3 class="text-center">Change User</h3>
+            <form method="post" action="{{ url_for('admin.change_password') }}">
+                <fieldset>
+                    <p>
+                        <label>
+                            Username
+                            <select name="manager">
+                                {% for manager in managers %}
+                                    <option value="{{ manager.username }}">{{ manager.username }}({{ manager.email }})</option>
+                                {% endfor %}
+                            </select>
+                        </label>
+                    </p>
+                    <p>
+                        <label>
+                            New Password
+                            <input type="password" name="password">
+                        </label>
+                    </p>
+                    <p>
+                        <input type="submit" name="submit" value="Change Password">
                     </p>
                 </fieldset>
             </form>

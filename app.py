@@ -106,7 +106,7 @@ def apply():
     persons = request.form.get('persons')
     message = request.form.get('message', '')
     if not all([first_name, last_name, email, persons]):
-        return redirect('https://readytogoout.games/#invalidapplication')
+        return redirect('https://readytogoout.games/invalidapplication/')
 
     application = models.Application.create(
         first_name=first_name,

@@ -64,7 +64,7 @@ class RegistrationMail(Mailjob):
 
 
 class ApplicationSentMail(Mailjob):
-    subject = 'Ready To Go Out Event Application'
+    subject = 'Deine Anfrage bei Ready to go out'
     templates = [
         plain_template('mail/application_sent_plain.html'),
         html_template('mail/application_sent.html')
@@ -75,7 +75,7 @@ class ApplicationSentMail(Mailjob):
 
 
 class NewApplicationMail(Mailjob):
-    subject = 'New Ready To Go Out Event Application'
+    subject = '[INTERN] Neu Anmeldung eingegangen'
     templates = [
         plain_template('mail/new_application_plain.html'),
         html_template('mail/new_application.html'),

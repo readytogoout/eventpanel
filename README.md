@@ -14,7 +14,12 @@ Required files in the `data/` directory:
     "name": "data/data.db",
     "engine": "peewee.SqliteDatabase"
   },
-  "SECRET_KEY": "CHOOSE_A_FANCY_SECRET_KEY"
+  "SECRET_KEY": "CHOOSE_A_FANCY_SECRET_KEY",
+  "GMAIL": {
+    "username": "A_MAIL_SENDER@gmail.com",
+    "password": "GMAIL_PASSWORD",
+    "from": " readytogoout@heliand-pfadfinderschaft.de"
+  }
 }
 ```
 ## Sources

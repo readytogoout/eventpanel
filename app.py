@@ -63,22 +63,22 @@ def login():
     username = request.form.get('username')
     password = request.form.get('password')
     if username is None:
-        flash("Please enter a username", category="error")
+        flash("Bitte gibt einen Nutzernamen ein", category="error")
         return redirect(url_for('login_form'))
     if password is None:
-        flash("Please enter a password", category="error")
+        flash("Bitte gib ein Passwort ein", category="error")
         return redirect(url_for('login_form'))
     redirect_url = request.form.get('redirect', '/')
     e: models.EventManger = models.EventManager.get_or_none(username=username)
     if e is None:
-        flash("Unknown username", category="error")
+        flash("Nutzername oder Passwort falsch", category="error")
         return redirect(url_for('login_form'))
     if bcrypt.checkpw(pre_encode_password(password), e.password.encode('utf-8')):
         session['username'] = username
         session['admin'] = e.site_admin
         return redirect(redirect_url, code=302)
     else:
-        flash("Invalid password", category="error")
+        flash("Nutzername oder Passwort falsch", category="error")
         return redirect(url_for('login_form'))
 
 

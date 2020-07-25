@@ -61,7 +61,7 @@ def templated(template):
     return wrapper
 
 
-def pw_gen(pw_len=8, use_special_chars=True):
+def pw_gen(pw_len=8, use_special_chars=False):
     chars = string.ascii_letters + string.digits
     if use_special_chars:
         chars += string.punctuation

@@ -7,7 +7,7 @@ Flask==1.1.2
 flask-peewee==3.0.3
 idna==2.9
 itsdangerous==1.1.0
-Jinja2==2.11.2
+Jinja2==2.11.3
 MarkupSafe==1.1.1
 peewee==3.13.3
 pycparser==2.20
